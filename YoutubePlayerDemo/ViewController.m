@@ -33,10 +33,10 @@
     // adding to subview
     [self.view addSubview:self.player];
     
-    UIImage *startImage = [UIImage imageNamed:@"start"];
-    UIImage *image1 = [UIImage imageNamed:@"rewind"];
-    UIImage *image2 = [UIImage imageNamed:@"player"];
-    UIImage *image3 = [UIImage imageNamed:@"forward"];
+    UIImage *startImage = [self imageWithImage:[UIImage imageNamed:@"start"] scaledToSize:CGSizeMake(60., 60.)];
+    UIImage *image1 = [self imageWithImage:[UIImage imageNamed:@"rewind"] scaledToSize:CGSizeMake(60., 60.)];
+    UIImage *image2 = [self imageWithImage:[UIImage imageNamed:@"player"] scaledToSize:CGSizeMake(60., 60.)];
+    UIImage *image3 = [self imageWithImage:[UIImage imageNamed:@"forward"] scaledToSize:CGSizeMake(60., 60.)];
     NSArray *images = @[image1, image2, image3];
     SphereMenu *sphereMenu = [[SphereMenu alloc] initWithStartPoint:CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height*.8)
                                                          startImage:startImage
@@ -128,6 +128,16 @@
     return UIStatusBarStyleLightContent;
 }
 
+- (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize
+{
+    //UIGraphicsBeginImageContext(newSize);
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
+}
 
 #pragma mark -
 #pragma mark Notifications
