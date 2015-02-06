@@ -26,7 +26,9 @@
     self.view.backgroundColor = [UIColor colorWithGradientStyle:UIGradientStyleTopToBottom withFrame:self.view.frame andColors:colors];
 
     // loading playlist to video player
-    [self.player loadWithPlaylistId:@"PLEE58C6029A8A6ADE"];
+//    [self.player loadWithVideoId:@"HvRypx1lbR4"];
+    
+    [self.player loadVideoById:@"HvRypx1lbR4" startSeconds:5.0 endSeconds:10.0 suggestedQuality:kYTPlaybackQualityMedium];
     
     [self.player setPlaybackQuality:kYTPlaybackQualityHD720];
 

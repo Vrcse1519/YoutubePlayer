@@ -205,6 +205,11 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 - (void)loadVideoById:(NSString *)videoId startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
 {
+    if(!_webView)
+    {
+        [self loadWithVideoId:videoId];
+    }
+    
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
     NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
     NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
