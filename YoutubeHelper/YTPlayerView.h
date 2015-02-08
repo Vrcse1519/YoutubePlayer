@@ -14,9 +14,6 @@
 
 #import <UIKit/UIKit.h>
 
-#define IS_OS_7_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
-#define IS_OS_8_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-
 @class YTPlayerView;
 
 /** These enums represent the state of the current video in the player. */
@@ -352,8 +349,8 @@ typedef enum {
  * @param suggestedQuality YTPlaybackQuality value suggesting a playback quality.
  */
 - (void)loadVideoById:(NSString *)videoId
-         startSeconds:(float)startSeconds
-           endSeconds:(float)endSeconds
+         startSeconds:(CGFloat)startSeconds
+           endSeconds:(CGFloat)endSeconds
      suggestedQuality:(YTPlaybackQuality)suggestedQuality;
 
 /**

@@ -20,32 +20,39 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    NSArray *colors = [[NSArray alloc] initWithObjects:FlatGreen, FlatMint, nil];
-    
-    self.view.backgroundColor = [UIColor colorWithGradientStyle:UIGradientStyleTopToBottom withFrame:self.view.frame andColors:colors];
+    // Do any additional setup after loading the view, typically from a nib.
 
     // loading playlist to video player
     [self.player loadWithPlaylistId:@"PLEE58C6029A8A6ADE"];
-    
-    [self.player setPlaybackQuality:kYTPlaybackQualityHD720];
 
     // adding to subview
     [self.view addSubview:self.player];
     
-    UIImage *startImage = [self imageWithImage:[UIImage imageNamed:@"start"] scaledToSize:CGSizeMake(60., 60.)];
-    UIImage *image1 = [self imageWithImage:[UIImage imageNamed:@"rewind"] scaledToSize:CGSizeMake(60., 60.)];
-    UIImage *image2 = [self imageWithImage:[UIImage imageNamed:@"player"] scaledToSize:CGSizeMake(60., 60.)];
-    UIImage *image3 = [self imageWithImage:[UIImage imageNamed:@"forward"] scaledToSize:CGSizeMake(60., 60.)];
+    NSArray *colors = [[NSArray alloc] initWithObjects:FlatGreen, FlatMint, nil];
+    
+    self.view.backgroundColor = [UIColor colorWithGradientStyle:UIGradientStyleTopToBottom withFrame:self.view.frame andColors:colors];
+    
+    UIImage *startImage = [UIImage imageNamed:@"start"];
+    UIImage *image1 = [UIImage imageNamed:@"rewind"];
+    UIImage *image2 = [UIImage imageNamed:@"player"];
+    UIImage *image3 = [UIImage imageNamed:@"forward"];
     NSArray *images = @[image1, image2, image3];
-    SphereMenu *sphereMenu = [[SphereMenu alloc] initWithStartPoint:CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height*.8)
-                                                         startImage:startImage
-                                                      submenuImages:images];
+    
+    SphereMenu *sphereMenu = [[SphereMenu alloc] initWithStartPoint:CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height-120) startImage:startImage submenuImages:images];
+    
     sphereMenu.delegate = self;
     [self.view addSubview:sphereMenu];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appIsInBakcground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillBeInBakcground:) name:UIApplicationWillResignActiveNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appIsInBakcground:)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appWillBeInBakcground:)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object:nil];
     
 }
 
@@ -55,8 +62,13 @@
 }
 
 -(void)dealloc{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIApplicationDidEnterBackgroundNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIApplicationWillResignActiveNotification
+                                                  object:nil];
 }
 
 
@@ -67,17 +79,16 @@
 {
     if(!_player)
     {
-        _player = [[YTPlayerView alloc] initWithFrame:CGRectMake(0, 50, self.view.frame.size.width, 240)];
+        _player = [[YTPlayerView alloc] initWithFrame:CGRectMake(0, 50, self.view.bounds.size.width, 220)];
         _player.delegate = self;
         _player.autoplay = NO;
-        _player.hd720 = YES;
         _player.modestbranding = YES;
         _player.allowLandscapeMode = YES;
         _player.forceBackToPortraitMode = YES;
         _player.allowAutoResizingPlayerFrame = YES;
-        _player.playsinline = YES;
+        _player.playsinline = NO;
         _player.fullscreen = YES;
-        _player.hd = YES;
+        _player.playsinline = YES;
     }
     
     return _player;
@@ -103,8 +114,7 @@
 
 - (void)sphereDidSelected:(int)index
 {
-    NSLog(@"sphere %d selected", index);
-    
+//    NSLog(@"sphere %d selected", index);
     if(index == 1) {
         if(self.counter == 0) {
             [self.player playVideo];
@@ -128,16 +138,6 @@
     return UIStatusBarStyleLightContent;
 }
 
-- (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize
-{
-    //UIGraphicsBeginImageContext(newSize);
-    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
-    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return newImage;
-}
 
 #pragma mark -
 #pragma mark Notifications

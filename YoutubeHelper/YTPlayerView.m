@@ -56,6 +56,7 @@ NSString static *const kYTPlayerCallbackOnYouTubeIframeAPIReady = @"onYouTubeIfr
 
 NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtube.com/embed/(.*)$";
 
+#pragma mark - Player Interface
 @interface YTPlayerView()
 
 // for screen sizes
@@ -64,11 +65,15 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 @property (nonatomic) CGFloat screenHeight;
 
 @property (nonatomic) CGRect prevFrame;
+@property (nonatomic) BOOL playerContainsCustomParams;
+@property (nonatomic) BOOL playerWithTimer;
+@property (nonatomic) CGFloat stopTimer;
 
 @property (nonatomic, strong) NSMutableDictionary *dicParameters;
 
 @end
 
+#pragma mark - Player Implementation
 @implementation YTPlayerView
 
 @synthesize allowLandscapeMode = _allowLandscapeMode;
@@ -99,6 +104,8 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 @synthesize hd720 = _hd720;
 @synthesize hd1080 = _hd1080;
 
+#pragma mark - Player Initializers
+
 - (BOOL)loadWithVideoId:(NSString *)videoId
 {
     return [self loadWithVideoId:videoId playerVars:nil];
@@ -111,7 +118,13 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 - (BOOL)loadWithVideoId:(NSString *)videoId playerVars:(NSDictionary *)playerVars
 {
-    if (!playerVars) {
+    if(self.playerContainsCustomParams)
+    {
+        return [self loadWithPlayerParams:playerVars];
+    }
+    
+    if (!playerVars)
+    {
         playerVars = @{};
     }
     
@@ -150,6 +163,9 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 - (void)playVideo
 {
+    if(self.playerWithTimer)
+        [self schedulePauseVideo];
+    
     [self stringFromEvaluatingJavaScript:@"player.playVideo();"];
 }
 
@@ -176,6 +192,11 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
     [self stringFromEvaluatingJavaScript:@"player.clearVideo();"];
 }
 
+- (void)schedulePauseVideo
+{
+    [self performSelector:@selector(pauseVideo) withObject:self afterDelay:self.stopTimer];
+}
+
 #pragma mark - Cueing methods
 
 - (void)cueVideoById:(NSString *)videoId startSeconds:(float)startSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
@@ -188,6 +209,8 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 - (void)cueVideoById:(NSString *)videoId startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
 {
+    self.playerWithTimer = YES;
+    self.stopTimer = endSeconds+1;
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
     NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
     NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
@@ -203,8 +226,10 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
     [self stringFromEvaluatingJavaScript:command];
 }
 
-- (void)loadVideoById:(NSString *)videoId startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)loadVideoById:(NSString *)videoId startSeconds:(CGFloat)startSeconds endSeconds:(CGFloat)endSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
 {
+    self.playerWithTimer = YES;
+    self.stopTimer = endSeconds+1;
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
     NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
     NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
@@ -222,6 +247,8 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 - (void)cueVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
 {
+    self.playerWithTimer = YES;
+    self.stopTimer = endSeconds+1;
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
     NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
     NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
@@ -239,6 +266,8 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 - (void)loadVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
 {
+    self.playerWithTimer = YES;
+    self.stopTimer = endSeconds+1;
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
     NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
     NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
@@ -438,12 +467,29 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    NSLog(@"***** Checking Loading -> %@", request.URL.absoluteString);
+    // logging state of video
+//    NSLog(@"***** Checking Loading -> %@", request.URL.absoluteString);
 
-//    if ([request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=2"])
-//    {
+    // adding timer to pause video at giving time
+    if ([request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=1"])
+    {
+        if(self.playerWithTimer)
+            [self schedulePauseVideo];
+    }
+    
+    // forcing video to autoplay
+    if ([request.URL.absoluteString isEqualToString:@"ytplayer://onReady?data=null"])
+    {
+        if(self.autoplay)
+            [self playVideo];
+    }
+    
+    if ([request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=1"])
+    {
 //        [self playVideo]; // play video if goes into background
-//    }
+    }
+    
+    // if found an error skip to next video
     if ([request.URL.absoluteString isEqualToString:@"ytplayer://onError?data=150"] || [request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=0"])
     {
         [self nextVideo]; // play next video if current can't be played
@@ -803,7 +849,8 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
     NSString *embedHTML = [NSString stringWithFormat:embedHTMLTemplate, playerVarsJsonString];
     
-    NSLog(@"%@", embedHTML);
+    // for debugging html file
+//    NSLog(@"%@", embedHTML);
     
     [self.webView loadHTMLString:embedHTML baseURL:[NSURL URLWithString:@"about:blank"]];
 
@@ -935,13 +982,11 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
  * @param ...
  * @return void...
  */
-- (void)playerStarted
+- (void)playerStarted//:(NSNotification*)notification
 {
-    if(self.forceBackToPortraitMode == YES)
-    {
-        ((AppDelegate*)[[UIApplication sharedApplication] delegate]).videoIsInFullscreen = YES;
-        [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
-    }
+    ((AppDelegate*)[[UIApplication sharedApplication] delegate]).videoIsInFullscreen = YES;
+    
+    [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
 }
 
 
@@ -952,7 +997,7 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
  * @param ...
  * @return void...
  */
-- (void)playerEnded
+- (void)playerEnded//:(NSNotification*)notification
 {
     if(self.forceBackToPortraitMode == YES)
     {
@@ -988,29 +1033,21 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
  */
 - (void)orientationChanged:(NSNotification*)notification
 {
-    UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
+    UIDevice *device = [UIDevice currentDevice];
     
-    if(UIDeviceOrientationIsLandscape(orientation))
+    if(device.orientation == UIDeviceOrientationLandscapeLeft || device.orientation == UIDeviceOrientationLandscapeRight)
     {
-        if(IS_OS_7_OR_LATER && !IS_OS_8_OR_LATER)
-        {
-            _screenRect = [[UIScreen mainScreen] bounds].size;
-            _screenHeight = _screenRect.width; // the values are flipped
-            _screenWidth = _screenRect.height;
-        }
-        else if (IS_OS_8_OR_LATER)
-        {
-            _screenRect = [[UIScreen mainScreen] bounds].size;
-            _screenHeight = _screenRect.height;
-            _screenWidth = _screenRect.width;
-        }
+        _screenRect = [[UIScreen mainScreen] bounds].size;
+        _screenHeight = _screenRect.height;
+        _screenWidth = _screenRect.width;
+        
         self.frame = CGRectMake(0, 0, self.screenWidth, self.screenHeight);
     }
-    else if(orientation == UIDeviceOrientationPortrait)
+    else if(device.orientation == UIDeviceOrientationPortrait)
     {
         self.frame = _prevFrame;
     }
-    else if (orientation == UIDeviceOrientationPortraitUpsideDown)
+    else if (device.orientation == UIDeviceOrientationPortraitUpsideDown)
     {
         [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger:UIInterfaceOrientationPortrait] forKey:@"orientation"];
         
@@ -1084,15 +1121,13 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 -(void)setAllowAutoResizingPlayerFrame:(BOOL)allowAutoResizingPlayerFrame {
     
     if(allowAutoResizingPlayerFrame == YES) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // current device
-            UIDevice *device = [UIDevice currentDevice];
-            
-            //Tell it to start monitoring the accelerometer for orientation
-            [device beginGeneratingDeviceOrientationNotifications];
-            //Get the notification centre for the app
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:device];
-        });
+        // current device
+        UIDevice *device = [UIDevice currentDevice];
+        
+        //Tell it to start monitoring the accelerometer for orientation
+        [device beginGeneratingDeviceOrientationNotifications];
+        //Get the notification centre for the app
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:device];
     }
     _allowAutoResizingPlayerFrame = allowAutoResizingPlayerFrame;
 }
@@ -1367,8 +1402,6 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 -(void)setHd720:(BOOL)hd720 {
     if(hd720 == YES) {
         [self.dicParameters setObject:@"hd720" forKey:@"vq"];
-        [self.dicParameters setObject:@"640px" forKey:@"width"];
-        [self.dicParameters setObject:@"360px" forKey:@"height"];
     }
     _hd720 = hd720;
 }
