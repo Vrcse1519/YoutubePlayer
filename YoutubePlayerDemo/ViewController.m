@@ -22,7 +22,7 @@
     [super viewDidLoad];
     
     // loading playlist to video player
-    [self.player loadWithPlaylistId:@"PLEE58C6029A8A6ADE"];
+    [self.player loadPlayerWithPlaylistId:@"PLEE58C6029A8A6ADE"];
     
     // adding to subview
     [self.view addSubview:self.player];

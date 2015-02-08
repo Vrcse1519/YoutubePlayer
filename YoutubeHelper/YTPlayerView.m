@@ -106,17 +106,17 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 #pragma mark - Player Initializers
 
-- (BOOL)loadWithVideoURL:(NSString *)videoURL
+- (BOOL)loadPlayerWithVideoURL:(NSString *)videoURL
 {
     return [self loadWithVideoId:[self findVideoIdFromURL:videoURL] playerVars:nil];
 }
 
-- (BOOL)loadWithVideoId:(NSString *)videoId
+- (BOOL)loadPlayerWithVideoId:(NSString *)videoId
 {
     return [self loadWithVideoId:videoId playerVars:nil];
 }
 
-- (BOOL)loadWithPlaylistId:(NSString *)playlistId
+- (BOOL)loadPlayerWithPlaylistId:(NSString *)playlistId
 {
     return [self loadWithPlaylistId:playlistId playerVars:nil];
 }
