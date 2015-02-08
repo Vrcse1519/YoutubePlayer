@@ -106,6 +106,11 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 #pragma mark - Player Initializers
 
+- (BOOL)loadWithVideoURL:(NSString *)videoURL
+{
+    return [self loadWithVideoId:[self findVideoIdFromURL:videoURL] playerVars:nil];
+}
+
 - (BOOL)loadWithVideoId:(NSString *)videoId
 {
     return [self loadWithVideoId:videoId playerVars:nil];
@@ -439,6 +444,27 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 }
 
 #pragma mark - Helper methods
+
+- (NSString *)findVideoIdFromURL:(NSString *)videoURL
+{
+    NSString *videoId;
+    NSString *searchedString = videoURL;
+    NSRange   searchedRange = NSMakeRange(0, [searchedString length]);
+    NSString *pattern = @"(youtu(?:\\.be|be\\.com)\\/(?:.*v(?:\\/|=)|(?:.*\\/)?)([\\w'-]+))";
+    NSError  *error = nil;
+    
+    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
+    NSTextCheckingResult *match = [regex firstMatchInString:searchedString options:0 range: searchedRange];
+    
+    // debugging plain youtube link
+//    NSLog(@"group1: %@", [searchedString substringWithRange:[match rangeAtIndex:1]]);
+    // debugging youtube video id
+//    NSLog(@"group2: %@", [searchedString substringWithRange:[match rangeAtIndex:2]]);
+    
+    videoId = [searchedString substringWithRange:[match rangeAtIndex:2]];
+    
+    return videoId;
+}
 
 - (NSArray *)availableQualityLevels
 {
