@@ -55,6 +55,8 @@ typedef enum {
  * API. For the full documentation, see the JavaScript documentation here:
  *     https://developers.google.com/youtube/js_api_reference#Events
  */
+
+#pragma mark - Player Protocol
 @protocol YTPlayerViewDelegate<NSObject>
 
 @optional
@@ -90,6 +92,7 @@ typedef enum {
 - (void)playerView:(YTPlayerView *)playerView receivedError:(YTPlayerError)error;
 @end
 
+#pragma mark - Player Interface
 /**
  * YTPlayerView is a custom UIView that client developers will use to include YouTube
  * videos in their iOS applications. It can be instantiated programmatically, or via
@@ -166,6 +169,21 @@ typedef enum {
 
 /** A delegate to be notified on playback events. */
 @property(nonatomic, weak) id<YTPlayerViewDelegate> delegate;
+
+#pragma mark - Player Initializers
+/**
+ * This method loads the player with the given video url.
+ * This is a convenience method for calling YTPlayerView::loadPlayerWithVideoId:withPlayerVars:
+ * without player variables.
+ *
+ * This method reloads the entire contents of the UIWebView and regenerates its HTML contents.
+ * To change the currently loaded video without reloading the entire UIWebView, use the
+ * YTPlayerView::cueVideoById:startSeconds:suggestedQuality: family of methods.
+ *
+ * @param videoURL The YouTube video url of the video to load in the player view.
+ * @return YES if player has been configured correctly, NO otherwise.
+ */
+- (BOOL)loadWithVideoURL:(NSString *)videoURL;
 
 /**
  * This method loads the player with the given video ID.
@@ -698,7 +716,7 @@ typedef enum {
  */
 - (int)playlistIndex;
 
-#pragma mark - Notifications
+//#pragma mark - Notifications
 
 // Adding notifications to allow rotation when app is restricted to portrait mode only
 // and to resize the webview in landscape for fullscreen youtube player, more info here:

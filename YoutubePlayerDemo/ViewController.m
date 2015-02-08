@@ -20,11 +20,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-
+    
     // loading playlist to video player
     [self.player loadWithPlaylistId:@"PLEE58C6029A8A6ADE"];
-
+    
     // adding to subview
     [self.view addSubview:self.player];
     
