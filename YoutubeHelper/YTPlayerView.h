@@ -183,7 +183,7 @@ typedef enum {
  * @param videoURL The YouTube video url of the video to load in the player view.
  * @return YES if player has been configured correctly, NO otherwise.
  */
-- (BOOL)loadWithVideoURL:(NSString *)videoURL;
+- (BOOL)loadPlayerWithVideoURL:(NSString *)videoURL;
 
 /**
  * This method loads the player with the given video ID.
@@ -197,7 +197,7 @@ typedef enum {
  * @param videoId The YouTube video ID of the video to load in the player view.
  * @return YES if player has been configured correctly, NO otherwise.
  */
-- (BOOL)loadWithVideoId:(NSString *)videoId;
+- (BOOL)loadPlayerWithVideoId:(NSString *)videoId;
 
 /**
  * This method loads the player with the given playlist ID.
@@ -212,7 +212,7 @@ typedef enum {
  * @param playlistId The YouTube playlist ID of the playlist to load in the player view.
  * @return YES if player has been configured correctly, NO otherwise.
  */
-- (BOOL)loadWithPlaylistId:(NSString *)playlistId;
+- (BOOL)loadPlayerWithPlaylistId:(NSString *)playlistId;
 
 /**
  * This method loads the player with the given video ID and player variables. Player variables
