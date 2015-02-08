@@ -56,6 +56,7 @@ NSString static *const kYTPlayerCallbackOnYouTubeIframeAPIReady = @"onYouTubeIfr
 
 NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtube.com/embed/(.*)$";
 
+#pragma mark - Player Interface
 @interface YTPlayerView()
 
 // for screen sizes
@@ -64,11 +65,15 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 @property (nonatomic) CGFloat screenHeight;
 
 @property (nonatomic) CGRect prevFrame;
+@property (nonatomic) BOOL playerContainsCustomParams;
+@property (nonatomic) BOOL playerWithTimer;
+@property (nonatomic) CGFloat stopTimer;
 
 @property (nonatomic, strong) NSMutableDictionary *dicParameters;
 
 @end
 
+#pragma mark - Player Implementation
 @implementation YTPlayerView
 
 @synthesize allowLandscapeMode = _allowLandscapeMode;
@@ -99,6 +104,8 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 @synthesize hd720 = _hd720;
 @synthesize hd1080 = _hd1080;
 
+#pragma mark - Player Initializers
+
 - (BOOL)loadWithVideoId:(NSString *)videoId
 {
     return [self loadWithVideoId:videoId playerVars:nil];
@@ -111,7 +118,13 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 - (BOOL)loadWithVideoId:(NSString *)videoId playerVars:(NSDictionary *)playerVars
 {
-    if (!playerVars) {
+    if(self.playerContainsCustomParams)
+    {
+        return [self loadWithPlayerParams:playerVars];
+    }
+    
+    if (!playerVars)
+    {
         playerVars = @{};
     }
     
@@ -150,6 +163,9 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 - (void)playVideo
 {
+    if(self.playerWithTimer)
+        [self schedulePauseVideo];
+    
     [self stringFromEvaluatingJavaScript:@"player.playVideo();"];
 }
 
@@ -176,6 +192,11 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
     [self stringFromEvaluatingJavaScript:@"player.clearVideo();"];
 }
 
+- (void)schedulePauseVideo
+{
+    [self performSelector:@selector(pauseVideo) withObject:self afterDelay:self.stopTimer];
+}
+
 #pragma mark - Cueing methods
 
 - (void)cueVideoById:(NSString *)videoId startSeconds:(float)startSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
@@ -188,6 +209,8 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 - (void)cueVideoById:(NSString *)videoId startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
 {
+    self.playerWithTimer = YES;
+    self.stopTimer = endSeconds+1;
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
     NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
     NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
@@ -203,13 +226,10 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
     [self stringFromEvaluatingJavaScript:command];
 }
 
-- (void)loadVideoById:(NSString *)videoId startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)loadVideoById:(NSString *)videoId startSeconds:(CGFloat)startSeconds endSeconds:(CGFloat)endSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
 {
-    if(!_webView)
-    {
-        [self loadWithVideoId:videoId];
-    }
-    
+    self.playerWithTimer = YES;
+    self.stopTimer = endSeconds+1;
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
     NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
     NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
@@ -227,6 +247,8 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 - (void)cueVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
 {
+    self.playerWithTimer = YES;
+    self.stopTimer = endSeconds+1;
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
     NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
     NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
@@ -244,6 +266,8 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 - (void)loadVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
 {
+    self.playerWithTimer = YES;
+    self.stopTimer = endSeconds+1;
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
     NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
     NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
@@ -443,12 +467,29 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    NSLog(@"***** Checking Loading -> %@", request.URL.absoluteString);
+    // logging state of video
+//    NSLog(@"***** Checking Loading -> %@", request.URL.absoluteString);
 
-//    if ([request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=2"])
-//    {
+    // adding timer to pause video at giving time
+    if ([request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=1"])
+    {
+        if(self.playerWithTimer)
+            [self schedulePauseVideo];
+    }
+    
+    // forcing video to autoplay
+    if ([request.URL.absoluteString isEqualToString:@"ytplayer://onReady?data=null"])
+    {
+        if(self.autoplay)
+            [self playVideo];
+    }
+    
+    if ([request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=1"])
+    {
 //        [self playVideo]; // play video if goes into background
-//    }
+    }
+    
+    // if found an error skip to next video
     if ([request.URL.absoluteString isEqualToString:@"ytplayer://onError?data=150"] || [request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=0"])
     {
         [self nextVideo]; // play next video if current can't be played
@@ -808,7 +849,8 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
     NSString *embedHTML = [NSString stringWithFormat:embedHTMLTemplate, playerVarsJsonString];
     
-    NSLog(@"%@", embedHTML);
+    // for debugging html file
+//    NSLog(@"%@", embedHTML);
     
     [self.webView loadHTMLString:embedHTML baseURL:[NSURL URLWithString:@"about:blank"]];
 

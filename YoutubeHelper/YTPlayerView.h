@@ -349,8 +349,8 @@ typedef enum {
  * @param suggestedQuality YTPlaybackQuality value suggesting a playback quality.
  */
 - (void)loadVideoById:(NSString *)videoId
-         startSeconds:(float)startSeconds
-           endSeconds:(float)endSeconds
+         startSeconds:(CGFloat)startSeconds
+           endSeconds:(CGFloat)endSeconds
      suggestedQuality:(YTPlaybackQuality)suggestedQuality;
 
 /**
