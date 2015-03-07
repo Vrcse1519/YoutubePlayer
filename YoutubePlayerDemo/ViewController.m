@@ -7,13 +7,25 @@
 //
 
 #import "ViewController.h"
+#import <AVFoundation/AVFoundation.h>
 #import "SphereMenu.h"
 #import "Chameleon.h"
 
+#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
+#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
+
+
+static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // public youtube api key
+
 @interface ViewController () <SphereMenuDelegate>
+
 @property (nonatomic) int counter;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic) BOOL isInBackgroundMode;
+
 @end
 
 @implementation ViewController
@@ -21,15 +33,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    NSArray *colors = @[FlatGreenDark, FlatGreen, FlatMintDark, FlatMint];
+
+    self.view.backgroundColor = [UIColor colorWithGradientStyle:UIGradientStyleTopToBottom
+                                                      withFrame:self.view.frame
+                                                      andColors:colors];
+    
     // loading playlist to video player
     [self.player loadPlayerWithPlaylistId:@"PLEE58C6029A8A6ADE"];
     
     // adding to subview
     [self.view addSubview:self.player];
-    
-    NSArray *colors = [[NSArray alloc] initWithObjects:FlatGreen, FlatMint, nil];
-    
-    self.view.backgroundColor = [UIColor colorWithGradientStyle:UIGradientStyleTopToBottom withFrame:self.view.frame andColors:colors];
     
     UIImage *startImage = [UIImage imageNamed:@"start"];
     UIImage *image1 = [UIImage imageNamed:@"rewind"];
@@ -41,6 +55,18 @@
     
     sphereMenu.delegate = self;
     [self.view addSubview:sphereMenu];
+    
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setActive:YES error:nil];
+    NSError *sessionError = nil;
+    BOOL success = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&sessionError];
+    if (!success){
+        NSLog(@"setCategory error %@", sessionError);
+    }
+    success = [audioSession setActive:YES error:&sessionError];
+    if (!success){
+        NSLog(@"setActive error %@", sessionError);
+    }
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -55,6 +81,28 @@
     
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    // Turn on remote control event delivery
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    
+    // Set itself as the first responder
+    [self becomeFirstResponder];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    
+    // Turn off remote control event delivery
+    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    
+    // Resign as first responder
+    [self resignFirstResponder];
+    
+    [super viewWillDisappear:animated];
+}
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -68,6 +116,38 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIApplicationWillResignActiveNotification
                                                   object:nil];
+}
+
+
+- (void)remoteControlReceivedWithEvent:(UIEvent *)receivedEvent {
+    
+    if (receivedEvent.type == UIEventTypeRemoteControl) {
+        
+        switch (receivedEvent.subtype) {
+                
+            case UIEventSubtypeRemoteControlTogglePlayPause:
+                if(self.counter == 0) {
+                    [self.player playVideo];
+                    self.counter = 1;
+                }
+                else {
+                    [self.player pauseVideo];
+                    self.counter = 0;
+                }
+                break;
+                
+            case UIEventSubtypeRemoteControlPreviousTrack:
+                [self.player previousVideo];
+                break;
+                
+            case UIEventSubtypeRemoteControlNextTrack:
+                [self.player nextVideo];
+                break;
+                
+            default:
+                break;
+        }
+    }
 }
 
 
