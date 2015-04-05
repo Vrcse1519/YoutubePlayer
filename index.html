@@ -72,8 +72,15 @@ self.player = [[YTPlayerView <span class="pl-c1">alloc</span>] <span class="pl-c
 
 <p><strong>5)</strong> Then, you can load a playlist or just a simple video with the youtube videoId or playlistId (more options available, like loading 5 multiple videos). </p>
 
-<div class="highlight highlight-objc"><pre><span class="pl-c">// loading videoId </span>
-[<span class="pl-v">self</span>.player <span class="pl-c1">loadWithVideoId:</span><span class="pl-s"><span class="pl-pds">@"</span>O8TiugM6Jg<span class="pl-pds">"</span></span>];
+<div class="highlight highlight-objc"><pre><span class="pl-c">// loading a video by URL</span>
+[<span class="pl-v">self</span>.player <span class="pl-c1">loadPlayerWithVideoURL:</span><span class="pl-s"><span class="pl-pds">@"</span>https://www.youtube.com/watch?v=mIAgmyoAmmc<span class="pl-pds">"</span></span>];
+
+<span class="pl-c">// loading videoId </span>
+[<span class="pl-v">self</span>.player <span class="pl-c1">loadPlayerWithVideoId:</span><span class="pl-s"><span class="pl-pds">@"</span>O8TiugM6Jg<span class="pl-pds">"</span></span>];
+
+<span class="pl-c">// loading a set of videos to the player</span>
+<span class="pl-c1">NSArray</span> *videoList = @[<span class="pl-s"><span class="pl-pds">@"</span>m2d0ID-V9So<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">@"</span>c7lNU4IPYlk<span class="pl-pds">"</span></span>];
+[<span class="pl-v">self</span>.player <span class="pl-c1">loadPlayerWithVideosId:</span>videoList];
 
 <span class="pl-c">// loading playlist</span>
 [<span class="pl-v">self</span>.player <span class="pl-c1">loadWithPlaylistId:</span><span class="pl-s"><span class="pl-pds">@"</span>PLEE58C6029A8A6ADE<span class="pl-pds">"</span></span>];</pre></div>
