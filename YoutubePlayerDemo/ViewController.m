@@ -38,14 +38,19 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
     self.view.backgroundColor = [UIColor colorWithGradientStyle:UIGradientStyleTopToBottom
                                                       withFrame:self.view.frame
                                                       andColors:colors];
-    
+
+    // loading a video by URL
+    // [self.player loadPlayerWithVideoURL:@"https://www.youtube.com/watch?v=mIAgmyoAmmc"];
+
+    // loading videoId
+    // [self.player loadPlayerWithVideoId:@"O8TiugM6Jg"];
+
     // loading playlist to video player
-    [self.player loadPlayerWithPlaylistId:@"PLEE58C6029A8A6ADE"];
+    // [self.player loadPlayerWithPlaylistId:@"PLEE58C6029A8A6ADE"];
     
     // loading a set of videos to the player
-//    NSArray *videoList = @[@"m2d0ID-V9So", @"c7lNU4IPYlk"];
-//    [self.player loadPlayerWithVideosId:videoList];
-    
+    NSArray *videoList = @[@"m2d0ID-V9So", @"c7lNU4IPYlk"];
+    [self.player loadPlayerWithVideosId:videoList];
     
     // adding to subview
     [self.view addSubview:self.player];

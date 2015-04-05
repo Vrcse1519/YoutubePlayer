@@ -32,8 +32,15 @@ self.player = [[YTPlayerView alloc] initWithFrame:CGRectMake(0, 50, 320, 350)];
 
 **5)** Then, you can load a playlist or just a simple video with the youtube videoId or playlistId (more options available, like loading 5 multiple videos). 
 ```objc
+// loading a video by URL
+[self.player loadPlayerWithVideoURL:@"https://www.youtube.com/watch?v=mIAgmyoAmmc"];
+
 // loading videoId 
-[self.player loadWithVideoId:@"O8TiugM6Jg"];
+[self.player loadPlayerWithVideoId:@"O8TiugM6Jg"];
+
+// loading a set of videos to the player
+NSArray *videoList = @[@"m2d0ID-V9So", @"c7lNU4IPYlk"];
+[self.player loadPlayerWithVideosId:videoList];
 
 // loading playlist
 [self.player loadWithPlaylistId:@"PLEE58C6029A8A6ADE"];
