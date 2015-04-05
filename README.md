@@ -24,14 +24,18 @@ This a simple youtube player which includes the Youtube helper api to get the mo
 @property (nonatomic, strong) YTPlayerView *player;
 ```
 
-**4)** Then, set the player with the preferred frame.
+**4)** Set the player frame.
 ```objc
 // setting up the player
 self.player = [[YTPlayerView alloc] initWithFrame:CGRectMake(0, 50, 320, 350)];
 ```
 
-**5)** Then, you can load a playlist or just a simple video with the youtube videoId or playlistId (more options available, like loading 5 multiple videos). 
+**5)** Then, you can load a playlist, multiple videos, a simple video or even using the video url like,
 ```objc
+// loading multiple videos from url
+NSArray *videosUrl = @[@"https://www.youtube.com/watch?v=Zv1QV6lrc_Y", @"https://www.youtube.com/watch?v=NVGEMZ_1ETs"];
+[self.player loadPlayerWithVideosURL:videosUrl];
+
 // loading a video by URL
 [self.player loadPlayerWithVideoURL:@"https://www.youtube.com/watch?v=mIAgmyoAmmc"];
 
@@ -46,7 +50,7 @@ NSArray *videoList = @[@"m2d0ID-V9So", @"c7lNU4IPYlk"];
 [self.player loadWithPlaylistId:@"PLEE58C6029A8A6ADE"];
 ```
 
-**6)** Optional, you can also load the video/playlist with some parameters to customize the youtube player.
+**6)** Optional, you can load the video/playlist with some parameters to customize the youtube player.
 ```objc
 // first create your dictionary to set the different parameters
 @property (nonatomic, strong) NSDictionary *dictionary;
