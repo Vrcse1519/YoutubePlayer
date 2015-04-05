@@ -109,6 +109,34 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 #pragma mark - Player Initializers
 
+- (BOOL)loadPlayerWithVideoURL:(NSString *)videoURL
+{
+    return [self loadWithVideoId:[self findVideoIdFromURL:videoURL] playerVars:nil];
+}
+
+- (BOOL)loadPlayerWithVideosURL:(NSArray *)videosURL
+{
+    if(videosURL.count > 0)
+    {
+        NSMutableArray *videosId = [[NSMutableArray alloc] initWithCapacity:videosURL.count];
+        
+        for(int x = 0; x < videosURL.count; x++)
+        {
+            videosId[x] = [[self findVideoIdFromURL:videosURL[x]] mutableCopy];
+        }
+        
+        self.loadPlayerDic = @[@"loadPlayerWithVideosId", videosId];
+        return [self loadPlayerWithVideoId:videosId[0]];
+    }
+    
+    return nil;
+}
+
+- (BOOL)loadPlayerWithVideoId:(NSString *)videoId
+{
+    return [self loadWithVideoId:videoId playerVars:nil];
+}
+
 - (BOOL)loadPlayerWithVideosId:(NSArray *)videosId
 {
     if(videosId.count > 0)
@@ -118,16 +146,6 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
     }
     
     return nil;
-}
-
-- (BOOL)loadPlayerWithVideoURL:(NSString *)videoURL
-{
-    return [self loadWithVideoId:[self findVideoIdFromURL:videoURL] playerVars:nil];
-}
-
-- (BOOL)loadPlayerWithVideoId:(NSString *)videoId
-{
-    return [self loadWithVideoId:videoId playerVars:nil];
 }
 
 - (BOOL)loadPlayerWithPlaylistId:(NSString *)playlistId
@@ -554,10 +572,10 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
         [self notifyDelegateOfYouTubeCallbackUrl:request.URL];
         return NO;
     }
-    else if ([request.URL.scheme isEqual: @"http"] || [request.URL.scheme isEqual:@"https"])
-    {
-        return [self handleHttpNavigationToUrl:request.URL];
-    }
+//    else if ([request.URL.scheme isEqual: @"http"] || [request.URL.scheme isEqual:@"https"])
+//    {
+//        return [self handleHttpNavigationToUrl:request.URL];
+//    }
     
     return YES;
 }

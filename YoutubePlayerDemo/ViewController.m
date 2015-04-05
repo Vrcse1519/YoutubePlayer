@@ -41,6 +41,10 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
 
     // loading a video by URL
     // [self.player loadPlayerWithVideoURL:@"https://www.youtube.com/watch?v=mIAgmyoAmmc"];
+    
+    // loading multiple videos from url
+    NSArray *videosUrl = @[@"https://www.youtube.com/watch?v=Zv1QV6lrc_Y", @"https://www.youtube.com/watch?v=NVGEMZ_1ETs"];
+    [self.player loadPlayerWithVideosURL:videosUrl];
 
     // loading videoId
     // [self.player loadPlayerWithVideoId:@"O8TiugM6Jg"];
@@ -49,8 +53,8 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
     // [self.player loadPlayerWithPlaylistId:@"PLEE58C6029A8A6ADE"];
     
     // loading a set of videos to the player
-    NSArray *videoList = @[@"m2d0ID-V9So", @"c7lNU4IPYlk"];
-    [self.player loadPlayerWithVideosId:videoList];
+//    NSArray *videoList = @[@"m2d0ID-V9So", @"c7lNU4IPYlk"];
+//    [self.player loadPlayerWithVideosId:videoList];
     
     // adding to subview
     [self.view addSubview:self.player];

@@ -186,6 +186,20 @@ typedef enum {
 - (BOOL)loadPlayerWithVideoURL:(NSString *)videoURL;
 
 /**
+ * This method loads the player with the given videos urls.
+ * This is a convenience method for calling YTPlayerView::loadPlayerWithVideoId:withPlayerVars:
+ * without player variables.
+ *
+ * This method reloads the entire contents of the UIWebView and regenerates its HTML contents.
+ * To change the currently loaded video without reloading the entire UIWebView, use the
+ * YTPlayerView::cueVideoById:startSeconds:suggestedQuality: family of methods.
+ *
+ * @param videosURL The YouTube videos urls of the videos to load in the player view.
+ * @return YES if player has been configured correctly, NO otherwise.
+ */
+- (BOOL)loadPlayerWithVideosURL:(NSArray *)videosURL;
+
+/**
  * This method loads the player with the given video ID.
  * This is a convenience method for calling YTPlayerView::loadPlayerWithVideoId:withPlayerVars:
  * without player variables.
