@@ -42,10 +42,10 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
     // loading playlist to video player
     [self.player loadPlayerWithPlaylistId:@"PLEE58C6029A8A6ADE"];
     
-    // loading videos after player is created! PENDING! working on a better approach for this!
-//    NSArray *videoList = @[@"ILljLDHcxjU", @"jcKoyA872uE", @"B8LUXGtTSaU", @"ZW2muvIKNh4"];
+    // loading a set of videos to the player
+//    NSArray *videoList = @[@"m2d0ID-V9So", @"c7lNU4IPYlk"];
+//    [self.player loadPlayerWithVideosId:videoList];
     
-//    [self.player loadPlaylistByVideos:videoList index:0 startSeconds:0.0 suggestedQuality:kYTPlaybackQualityHD720];
     
     // adding to subview
     [self.view addSubview:self.player];
@@ -222,6 +222,12 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
     return UIStatusBarStyleLightContent;
 }
 
+- (void)playerViewDidBecomeReady:(YTPlayerView *)playerView
+{
+    // loading a set of videos to the player after the player has finished loading
+//    NSArray *videoList = @[@"m2d0ID-V9So", @"c7lNU4IPYlk"];
+//    [self.player loadPlaylistByVideos:videoList index:0 startSeconds:0.0 suggestedQuality:kYTPlaybackQualityHD720];
+}
 
 #pragma mark -
 #pragma mark Notifications

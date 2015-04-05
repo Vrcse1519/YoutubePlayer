@@ -69,6 +69,9 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 @property (nonatomic) BOOL playerWithTimer;
 @property (nonatomic) CGFloat stopTimer;
 
+@property (nonatomic, strong) NSArray *loadPlayerDic;
+@property (nonatomic, assign) BOOL isPlayerLoaded;
+
 @property (nonatomic, strong) NSMutableDictionary *dicParameters;
 
 @end
@@ -105,6 +108,17 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 @synthesize hd1080 = _hd1080;
 
 #pragma mark - Player Initializers
+
+- (BOOL)loadPlayerWithVideosId:(NSArray *)videosId
+{
+    if(videosId.count > 0)
+    {
+        self.loadPlayerDic = @[@"loadPlayerWithVideosId", videosId];
+        return [self loadPlayerWithVideoId:videosId[0]];
+    }
+    
+    return nil;
+}
 
 - (BOOL)loadPlayerWithVideoURL:(NSString *)videoURL
 {
@@ -495,7 +509,7 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 {
     // logging state of video
 //    NSLog(@"***** Checking Loading -> %@", request.URL.absoluteString);
-
+    
     // adding timer to pause video at giving time
     if ([request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=1"])
     {
@@ -701,6 +715,8 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
     if ([action isEqual:kYTPlayerCallbackOnReady])
     {
+        self.isPlayerLoaded = YES;
+        
         if ([self.delegate respondsToSelector:@selector(playerViewDidBecomeReady:)])
         {
             [self.delegate playerViewDidBecomeReady:self];
@@ -915,7 +931,7 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
  * @return The result of cueing the playlist.
  */
 - (void)loadPlaylist:(NSString *)cueingString index:(int)index startSeconds:(float)startSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
-{
+{    
     NSNumber *indexValue = [NSNumber numberWithInt:index];
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
     NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
@@ -1123,6 +1139,19 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 // These parameters can be set by the user, if they are not
 // they won't be loaded to the player because, youtube api
 // will use defaults parameters when player created.
+
+- (void)setIsPlayerLoaded:(BOOL)isPlayerLoaded
+{
+    if(self.loadPlayerDic.count > 0)
+    {
+        if([self.loadPlayerDic[0] isEqualToString:@"loadPlayerWithVideosId"])
+        {
+            [self loadPlaylist:[self stringFromVideoIdArray:self.loadPlayerDic[1]] index:0 startSeconds:0.0 suggestedQuality:kYTPlaybackQualityHD720];
+        }
+    }
+    
+    _isPlayerLoaded = isPlayerLoaded;
+}
 
 -(BOOL)allowLandscapeMode {
     return _allowLandscapeMode;
