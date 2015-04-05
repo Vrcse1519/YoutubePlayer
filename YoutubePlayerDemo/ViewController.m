@@ -42,6 +42,11 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
     // loading playlist to video player
     [self.player loadPlayerWithPlaylistId:@"PLEE58C6029A8A6ADE"];
     
+    // loading videos after player is created! PENDING! working on a better approach for this!
+//    NSArray *videoList = @[@"ILljLDHcxjU", @"jcKoyA872uE", @"B8LUXGtTSaU", @"ZW2muvIKNh4"];
+    
+//    [self.player loadPlaylistByVideos:videoList index:0 startSeconds:0.0 suggestedQuality:kYTPlaybackQualityHD720];
+    
     // adding to subview
     [self.view addSubview:self.player];
     
