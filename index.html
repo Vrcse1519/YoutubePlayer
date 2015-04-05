@@ -57,23 +57,31 @@
 <h3>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h3>
 
-<p><strong>1)</strong> Download the zip file and extract it. Then add the YoutubeHelper folder to your project.</p>
-
-<p><strong>2)</strong> After these folder have been added to the project (remember to select copy file if necessary when adding to the project) you can start using this helper library, it's really simple...</p>
-
-<p><strong>3)</strong> Create a player property.</p>
+<ul>
+<li><p>Download the zip file and extract it. Then add the YoutubeHelper folder to your project.</p></li>
+<li><p>After these folder have been added to the project (remember to select copy file if necessary when adding to the project) you can start using this helper library, it's really simple...</p></li>
+<li><p>Create a player property.</p></li>
+</ul>
 
 <div class="highlight highlight-objc"><pre>@property (nonatomic, strong) YTPlayerView *player;</pre></div>
 
-<p><strong>4)</strong> Then, set the player with the preferred frame.</p>
+<ul>
+<li>Set the player frame.</li>
+</ul>
 
 <div class="highlight highlight-objc"><pre><span class="pl-c">// setting up the player</span>
 self.player = [[YTPlayerView <span class="pl-c1">alloc</span>] <span class="pl-c1">initWithFrame:</span><span class="pl-c1">CGRectMake</span>(<span class="pl-c1">0</span>, <span class="pl-c1">50</span>, <span class="pl-c1">320</span>, <span class="pl-c1">350</span>)];</pre></div>
 
-<p><strong>5)</strong> Then, you can load a playlist or just a simple video with the youtube videoId or playlistId (more options available, like loading 5 multiple videos). </p>
+<ul>
+<li>Then, you can load a playlist, multiple videos, a simple video or even using the video url like.</li>
+</ul>
 
 <div class="highlight highlight-objc"><pre><span class="pl-c">// loading a video by URL</span>
 [<span class="pl-v">self</span>.player <span class="pl-c1">loadPlayerWithVideoURL:</span><span class="pl-s"><span class="pl-pds">@"</span>https://www.youtube.com/watch?v=mIAgmyoAmmc<span class="pl-pds">"</span></span>];
+
+<span class="pl-c">// loading multiple videos from url</span>
+<span class="pl-c1">NSArray</span> *videosUrl = @[<span class="pl-s"><span class="pl-pds">@"</span>https://www.youtube.com/watch?v=Zv1QV6lrc_Y<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">@"</span>https://www.youtube.com/watch?v=NVGEMZ_1ETs<span class="pl-pds">"</span></span>];
+[<span class="pl-v">self</span>.player <span class="pl-c1">loadPlayerWithVideosURL:</span>videosUrl];
 
 <span class="pl-c">// loading videoId </span>
 [<span class="pl-v">self</span>.player <span class="pl-c1">loadPlayerWithVideoId:</span><span class="pl-s"><span class="pl-pds">@"</span>O8TiugM6Jg<span class="pl-pds">"</span></span>];
@@ -85,7 +93,9 @@ self.player = [[YTPlayerView <span class="pl-c1">alloc</span>] <span class="pl-c
 <span class="pl-c">// loading playlist</span>
 [<span class="pl-v">self</span>.player <span class="pl-c1">loadWithPlaylistId:</span><span class="pl-s"><span class="pl-pds">@"</span>PLEE58C6029A8A6ADE<span class="pl-pds">"</span></span>];</pre></div>
 
-<p><strong>6)</strong> Optional, you can also load the video/playlist with some parameters to customize the youtube player.</p>
+<ul>
+<li>Optional, you can also load the video/playlist with some parameters to customize the youtube player.</li>
+</ul>
 
 <div class="highlight highlight-objc"><pre><span class="pl-c">// first create your dictionary to set the different parameters</span>
 @property (nonatomic, strong) <span class="pl-c1">NSDictionary</span> *dictionary;
@@ -110,12 +120,16 @@ self.player.modestbranding = <span class="pl-c1">YES</span>;
 <span class="pl-c">// and then just call load the playlist/video</span>
 [<span class="pl-v">self</span>.player <span class="pl-c1">loadWithPlaylistId:</span><span class="pl-s"><span class="pl-pds">@"</span>PLEE58C6029A8A6ADE<span class="pl-pds">"</span></span>];</pre></div>
 
-<p><strong>7)</strong> Finally, add the player to your view and Done!</p>
+<ul>
+<li>Finally, add the player to your view and Done!</li>
+</ul>
 
 <div class="highlight highlight-objc"><pre><span class="pl-c">// adding to subview</span>
 [<span class="pl-v">self</span>.view <span class="pl-c1">addSubview:</span><span class="pl-v">self</span>.player];</pre></div>
 
-<p><strong>8)</strong> Extra, Some helper functions were added to the project that you might want to use (just set the variable before loading the video) as...</p>
+<ul>
+<li>Extra, Some helper functions were added to the project that you might want to use (just set the variable before loading the video) as...</li>
+</ul>
 
 <div class="highlight highlight-objc"><pre><span class="pl-c">// allows landscape mode </span>
 self.player.allowLandscapeMode = <span class="pl-c1">YES</span>;
