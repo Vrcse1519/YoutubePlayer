@@ -78,7 +78,7 @@ self.player.modestbranding = YES;
 
 * Finally, add the player to your view and Done!
 ```objc
-// adding to subview
+// adding player to view
 [self.view addSubview:self.player];
 ```
 
