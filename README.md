@@ -1,4 +1,4 @@
-### Embedded Youtube Video Player - (Objective-C).
+### Embedded Youtube Video Player - (Objective-C)
 This a simple youtube player which includes the Youtube helper api to get the most of it. The intention is to help some developers in the use of their framework.
 
 ### Preview in Portrait Mode
@@ -15,22 +15,22 @@ This a simple youtube player which includes the Youtube helper api to get the mo
 ![screenshot-5](http://s12.postimg.org/5cybqnxct/Photo_2014_12_16_7_08_23_PM.png)
 
 ### Usage
-**1)** Download the zip file and extract it. Then add the YoutubeHelper folder to your project.
+* Download the zip file and extract it. Then add the YoutubeHelper folder to your project.
 
-**2)** After these folder have been added to the project (remember to select copy file if necessary when adding to the project) you can start using this helper library, it's really simple...
+* After these folder have been added to the project (remember to select copy file if necessary when adding to the project) you can start using this helper library, it's really simple...
 
-**3)** Create a player property.
+* Create a player property.
 ```objc
 @property (nonatomic, strong) YTPlayerView *player;
 ```
 
-**4)** Set the player frame.
+* Set the player frame.
 ```objc
 // setting up the player
 self.player = [[YTPlayerView alloc] initWithFrame:CGRectMake(0, 50, 320, 350)];
 ```
 
-**5)** Then, you can load a playlist, multiple videos, a simple video or even using the video url like,
+* Then, you can load a playlist, multiple videos, a simple video or even using the video url like.
 ```objc
 // loading multiple videos from url
 NSArray *videosUrl = @[@"https://www.youtube.com/watch?v=Zv1QV6lrc_Y", @"https://www.youtube.com/watch?v=NVGEMZ_1ETs"];
@@ -50,7 +50,7 @@ NSArray *videoList = @[@"m2d0ID-V9So", @"c7lNU4IPYlk"];
 [self.player loadWithPlaylistId:@"PLEE58C6029A8A6ADE"];
 ```
 
-**6)** Optional, you can load the video/playlist with some parameters to customize the youtube player.
+* Optional, you can load the video/playlist with some parameters to customize the youtube player.
 ```objc
 // first create your dictionary to set the different parameters
 @property (nonatomic, strong) NSDictionary *dictionary;
@@ -76,13 +76,13 @@ self.player.modestbranding = YES;
 [self.player loadWithPlaylistId:@"PLEE58C6029A8A6ADE"];
 ```
 
-**7)** Finally, add the player to your view and Done!
+* Finally, add the player to your view and Done!
 ```objc
 // adding to subview
 [self.view addSubview:self.player];
 ```
 
-**8)** Extra, Some helper functions were added to the project that you might want to use (just set the variable before loading the video) as...
+* Extra, Some helper functions were added to the project that you might want to use (just set the variable before loading the video) as...
 ```objc
 // allows landscape mode 
 self.player.allowLandscapeMode = YES;
