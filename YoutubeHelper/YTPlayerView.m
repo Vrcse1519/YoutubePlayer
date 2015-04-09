@@ -846,15 +846,9 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
  */
 - (BOOL)loadWithPlayerParams:(NSDictionary *)additionalPlayerParams
 {
-    // Remove the existing webView to reset any state
-    if(_webView)
-        [_webView removeFromSuperview];
-    
     // creating webview for youtube player
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
+    if(!_webView || !_webView.window)
         [self addSubview:self.webView];
-    });
     
     // preserving users frame
     _prevFrame = self.frame;
