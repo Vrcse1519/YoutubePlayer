@@ -1416,12 +1416,15 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 }
 
 -(BOOL)showinfo {
-    return _fullscreen;
+    return _showinfo;
 }
 
 -(void)setShowinfo:(BOOL)showinfo {
     
     if(showinfo == YES) {
+        [self.dicParameters setObject:@(1) forKey:@"showinfo"];
+    }
+    else{
         [self.dicParameters setObject:@(0) forKey:@"showinfo"];
     }
     _showinfo = showinfo;
