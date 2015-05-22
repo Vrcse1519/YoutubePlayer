@@ -10,6 +10,8 @@
 		3C28C00E1B0ED9F300F93290 /* JVYoutubePlayer-iFrame.html in Resources */ = {isa = PBXBuildFile; fileRef = 3C28C00B1B0ED9F300F93290 /* JVYoutubePlayer-iFrame.html */; };
 		3C28C00F1B0ED9F300F93290 /* JVYoutubePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C28C00D1B0ED9F300F93290 /* JVYoutubePlayer.m */; };
 		3C28C0141B0EDAA500F93290 /* JVContants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C28C0131B0EDAA500F93290 /* JVContants.m */; };
+		3C28C01C1B0EE4A200F93290 /* JVYoutubePlayer+Queuing.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C28C01B1B0EE4A200F93290 /* JVYoutubePlayer+Queuing.m */; };
+		3C28C01F1B0EE72B00F93290 /* JVAppHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C28C01E1B0EE72B00F93290 /* JVAppHelper.m */; };
 		3CCC183A1A414E0B00AFC7BF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCC182C1A414E0B00AFC7BF /* AppDelegate.m */; };
 		3CCC183D1A414E0B00AFC7BF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CCC18311A414E0B00AFC7BF /* Images.xcassets */; };
 		3CCC183E1A414E0B00AFC7BF /* SphereMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCC18341A414E0B00AFC7BF /* SphereMenu.m */; };
@@ -42,6 +44,10 @@
 		3C28C0121B0EDA9300F93290 /* JVConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVConstants.h; sourceTree = "<group>"; };
 		3C28C0131B0EDAA500F93290 /* JVContants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVContants.m; sourceTree = "<group>"; };
 		3C28C0151B0EDDEC00F93290 /* JVEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVEnums.h; sourceTree = "<group>"; };
+		3C28C01A1B0EE4A200F93290 /* JVYoutubePlayer+Queuing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JVYoutubePlayer+Queuing.h"; sourceTree = "<group>"; };
+		3C28C01B1B0EE4A200F93290 /* JVYoutubePlayer+Queuing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JVYoutubePlayer+Queuing.m"; sourceTree = "<group>"; };
+		3C28C01D1B0EE72B00F93290 /* JVAppHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppHelper.h; sourceTree = "<group>"; };
+		3C28C01E1B0EE72B00F93290 /* JVAppHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppHelper.m; sourceTree = "<group>"; };
 		3CCC182B1A414E0B00AFC7BF /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3CCC182C1A414E0B00AFC7BF /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		3CCC182E1A414E0B00AFC7BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -98,6 +104,10 @@
 				3C28C0121B0EDA9300F93290 /* JVConstants.h */,
 				3C28C0131B0EDAA500F93290 /* JVContants.m */,
 				3C28C0151B0EDDEC00F93290 /* JVEnums.h */,
+				3C28C01A1B0EE4A200F93290 /* JVYoutubePlayer+Queuing.h */,
+				3C28C01B1B0EE4A200F93290 /* JVYoutubePlayer+Queuing.m */,
+				3C28C01D1B0EE72B00F93290 /* JVAppHelper.h */,
+				3C28C01E1B0EE72B00F93290 /* JVAppHelper.m */,
 			);
 			name = JVYoutubePlayer;
 			sourceTree = "<group>";
@@ -327,6 +337,8 @@
 				3CCC18411A414E0B00AFC7BF /* ViewController.m in Sources */,
 				A8EC7C6F1A43917D00E48DF6 /* NSArray+Chameleon.m in Sources */,
 				3C28C0141B0EDAA500F93290 /* JVContants.m in Sources */,
+				3C28C01F1B0EE72B00F93290 /* JVAppHelper.m in Sources */,
+				3C28C01C1B0EE4A200F93290 /* JVYoutubePlayer+Queuing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

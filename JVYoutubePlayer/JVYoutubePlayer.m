@@ -20,19 +20,41 @@
 
 @property (nonatomic) CGRect prevFrame;
 @property (nonatomic) BOOL playerContainsCustomParams;
-@property (nonatomic) BOOL playerWithTimer;
-@property (nonatomic) CGFloat stopTimer;
 
 @property (nonatomic, strong) NSArray *loadPlayerDic;
 @property (nonatomic, assign) BOOL isPlayerLoaded;
 
 @property (nonatomic, strong) NSMutableDictionary *dicParameters;
 
+/**
+ * Protected method for loading both cases of playlist ID and array of video IDs. Loading
+ * a playlist automatically starts playback.
+ *
+ * @param cueingString A JavaScript string representing an array, playlist ID or list of
+ *                     video IDs to play with the playlist player.
+ * @param index 0-index position of video to start playback on.
+ * @param startSeconds Seconds after start of video to begin playback.
+ * @param suggestedQuality Suggested JVPlaybackQuality to play the videos.
+ * @return The result of cueing the playlist.
+ */
+- (void)loadPlaylist:(NSString *)cueingString index:(int)index startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality;
+
+/**
+ * Protected method for evaluating JavaScript in the WebView.
+ *
+ * @param jsToExecute The JavaScript code in string format that we want to execute.
+ * @return JavaScript response from evaluating code.
+ */
+- (NSString *)stringFromEvaluatingJavaScript:(NSString *)jsToExecute;
+
 @end
 
 #pragma mark - Player Implementation
 @implementation JVYoutubePlayer
 
+@synthesize playerWithTimer = _playerWithTimer;
+@synthesize stopTimer = _stopTimer;
+@synthesize appHelper = _appHelper;
 @synthesize allowLandscapeMode = _allowLandscapeMode;
 @synthesize forceBackToPortraitMode = _forceBackToPortraitMode;
 @synthesize allowAutoResizingPlayerFrame = _allowAutoResizingPlayerFrame;
@@ -188,108 +210,6 @@
     [self performSelector:@selector(pauseVideo) withObject:self afterDelay:self.stopTimer];
 }
 
-#pragma mark - Cueing methods
-
-- (void)cueVideoById:(NSString *)videoId startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
-{
-    NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSString *qualityValue = [JVYoutubePlayer stringForPlaybackQuality:suggestedQuality];
-    NSString *command = [NSString stringWithFormat:@"player.cueVideoById('%@', %@, '%@');", videoId, startSecondsValue, qualityValue];
-    [self stringFromEvaluatingJavaScript:command];
-}
-
-- (void)cueVideoById:(NSString *)videoId startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
-{
-    self.playerWithTimer = YES;
-    self.stopTimer = endSeconds+1;
-    NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
-    NSString *qualityValue = [JVYoutubePlayer stringForPlaybackQuality:suggestedQuality];
-    NSString *command = [NSString stringWithFormat:@"player.cueVideoById('%@', %@, %@, '%@');", videoId, startSecondsValue, endSecondsValue, qualityValue];
-    [self stringFromEvaluatingJavaScript:command];
-}
-
-- (void)loadVideoById:(NSString *)videoId startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
-{
-    NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSString *qualityValue = [JVYoutubePlayer stringForPlaybackQuality:suggestedQuality];
-    NSString *command = [NSString stringWithFormat:@"player.loadVideoById('%@', %@, '%@');", videoId, startSecondsValue, qualityValue];
-    [self stringFromEvaluatingJavaScript:command];
-}
-
-- (void)loadVideoById:(NSString *)videoId startSeconds:(CGFloat)startSeconds endSeconds:(CGFloat)endSeconds suggestedQuality:( JVPlaybackQuality)suggestedQuality
-{
-    self.playerWithTimer = YES;
-    self.stopTimer = endSeconds+1;
-    NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
-    NSString *qualityValue = [JVYoutubePlayer stringForPlaybackQuality:suggestedQuality];
-    NSString *command = [NSString stringWithFormat:@"player.loadVideoById('%@', %@, %@, '%@');", videoId, startSecondsValue, endSecondsValue, qualityValue];
-    [self stringFromEvaluatingJavaScript:command];
-}
-
-- (void)cueVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
-{
-    NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSString *qualityValue = [JVYoutubePlayer stringForPlaybackQuality:suggestedQuality];
-    NSString *command = [NSString stringWithFormat:@"player.cueVideoByUrl('%@', %@, '%@');", videoURL, startSecondsValue, qualityValue];
-    [self stringFromEvaluatingJavaScript:command];
-}
-
-- (void)cueVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
-{
-    self.playerWithTimer = YES;
-    self.stopTimer = endSeconds+1;
-    NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
-    NSString *qualityValue = [JVYoutubePlayer stringForPlaybackQuality:suggestedQuality];
-    NSString *command = [NSString stringWithFormat:@"player.cueVideoByUrl('%@', %@, %@, '%@');", videoURL, startSecondsValue, endSecondsValue, qualityValue];
-    [self stringFromEvaluatingJavaScript:command];
-}
-
-- (void)loadVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
-{
-    NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSString *qualityValue = [JVYoutubePlayer stringForPlaybackQuality:suggestedQuality];
-    NSString *command = [NSString stringWithFormat:@"player.loadVideoByUrl('%@', %@, '%@');", videoURL, startSecondsValue, qualityValue];
-    [self stringFromEvaluatingJavaScript:command];
-}
-
-- (void)loadVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
-{
-    self.playerWithTimer = YES;
-    self.stopTimer = endSeconds+1;
-    NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
-    NSString *qualityValue = [JVYoutubePlayer stringForPlaybackQuality:suggestedQuality];
-    NSString *command = [NSString stringWithFormat:@"player.loadVideoByUrl('%@', %@, %@, '%@');", videoURL, startSecondsValue, endSecondsValue, qualityValue];
-    [self stringFromEvaluatingJavaScript:command];
-}
-
-#pragma mark - Cueing methods for lists
-
-- (void)cuePlaylistByPlaylistId:(NSString *)playlistId index:(int)index startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
-{
-    NSString *playlistIdString = [NSString stringWithFormat:@"'%@'", playlistId];
-    [self cuePlaylist:playlistIdString index:index startSeconds:startSeconds suggestedQuality:suggestedQuality];
-}
-
-- (void)cuePlaylistByVideos:(NSArray *)videoIds index:(int)index startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
-{
-    [self cuePlaylist:[self stringFromVideoIdArray:videoIds] index:index startSeconds:startSeconds suggestedQuality:suggestedQuality];
-}
-
-- (void)loadPlaylistByPlaylistId:(NSString *)playlistId index:(int)index startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
-{
-    NSString *playlistIdString = [NSString stringWithFormat:@"'%@'", playlistId];
-    [self loadPlaylist:playlistIdString index:index startSeconds:startSeconds suggestedQuality:suggestedQuality];
-}
-
-- (void)loadPlaylistByVideos:(NSArray *)videoIds index:(int)index startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
-{
-    [self loadPlaylist:[self stringFromVideoIdArray:videoIds] index:index startSeconds:startSeconds suggestedQuality:suggestedQuality];
-}
-
 #pragma mark - Setting the playback rate
 
 - (float)playbackRate
@@ -348,7 +268,7 @@
 - (JVPlayerState)playerState
 {
     NSString *returnValue = [self stringFromEvaluatingJavaScript:@"player.getPlayerState();"];
-    return [JVYoutubePlayer playerStateForString:returnValue];
+    return [self.appHelper playerStateForString:returnValue];
 }
 
 - (float)currentTime
@@ -360,12 +280,12 @@
 - (JVPlaybackQuality)playbackQuality
 {
     NSString *qualityValue = [self stringFromEvaluatingJavaScript:@"player.getPlaybackQuality();"];
-    return [JVYoutubePlayer playbackQualityForString:qualityValue];
+    return [self.appHelper playbackQualityForString:qualityValue];
 }
 
 - (void)setPlaybackQuality:(JVPlaybackQuality)suggestedQuality
 {
-    NSString *qualityValue = [JVYoutubePlayer stringForPlaybackQuality:suggestedQuality];
+    NSString *qualityValue = [self.appHelper stringForPlaybackQuality:suggestedQuality];
     NSString *command = [NSString stringWithFormat:@"player.setPlaybackQuality('%@');", qualityValue];
     [self stringFromEvaluatingJavaScript:command];
 }
@@ -470,7 +390,7 @@
 
     NSMutableArray *levels = [[NSMutableArray alloc] init];
     for (NSString *rawQualityValue in rawQualityValues) {
-        JVPlaybackQuality quality = [JVYoutubePlayer playbackQualityForString:rawQualityValue];
+        JVPlaybackQuality quality = [self.appHelper playbackQualityForString:rawQualityValue];
         [levels addObject:[NSNumber numberWithInt:quality]];
     }
     
@@ -534,135 +454,28 @@
     return YES;
 }
 
-/**
- * Convert a quality value from NSString to the typed enum value.
- *
- * @param qualityString A string representing playback quality. Ex: "small", "medium", "hd1080".
- * @return An enum value representing the playback quality.
- */
-+ (JVPlaybackQuality)playbackQualityForString:(NSString *)qualityString
-{
-    JVPlaybackQuality quality = kJVPlaybackQualityUnknown;
-
-    if ([qualityString isEqualToString:kJVPlaybackQualitySmallQuality])
-    {
-        quality = kJVPlaybackQualitySmall;
-    }
-    else if ([qualityString isEqualToString:kJVPlaybackQualityMediumQuality])
-    {
-        quality = kJVPlaybackQualityMedium;
-    }
-    else if ([qualityString isEqualToString:kJVPlaybackQualityLargeQuality])
-    {
-        quality = kJVPlaybackQualityLarge;
-    }
-    else if ([qualityString isEqualToString:kJVPlaybackQualityHD720Quality])
-    {
-        quality = kJVPlaybackQualityHD720;
-    }
-    else if ([qualityString isEqualToString:kJVPlaybackQualityHD1080Quality])
-    {
-        quality = kJVPlaybackQualityHD1080;
-    }
-    else if ([qualityString isEqualToString:kJVPlaybackQualityHighResQuality])
-    {
-        quality = kJVPlaybackQualityHighRes;
-    }
-
-    return quality;
-}
-
-/**
- * Convert a |JVPlaybackQuality| value from the typed value to NSString.
- *
- * @param quality A |JVPlaybackQuality| parameter.
- * @return An |NSString| value to be used in the JavaScript bridge.
- */
-+ (NSString *)stringForPlaybackQuality:(JVPlaybackQuality)quality
-{
-    switch (quality) {
-        case kJVPlaybackQualitySmall:
-            return kJVPlaybackQualitySmallQuality;
-        case kJVPlaybackQualityMedium:
-            return kJVPlaybackQualityMediumQuality;
-        case kJVPlaybackQualityLarge:
-            return kJVPlaybackQualityLargeQuality;
-        case kJVPlaybackQualityHD720:
-            return kJVPlaybackQualityHD720Quality;
-        case kJVPlaybackQualityHD1080:
-            return kJVPlaybackQualityHD1080Quality;
-        case kJVPlaybackQualityHighRes:
-            return kJVPlaybackQualityHighResQuality;
-        default:
-            return kJVPlaybackQualityUnknownQuality;
-    }
-}
-
-/**
- * Convert a state value from NSString to the typed enum value.
- *
- * @param stateString A string representing player state. Ex: "-1", "0", "1".
- * @return An enum value representing the player state.
- */
-+ (JVPlayerState)playerStateForString:(NSString *)stateString
-{
-    JVPlayerState state = kJVPlayerStateUnknown;
-    
-    if ([stateString isEqualToString:kJVPlayerStateUnstartedCode])
-    {
-        state = kJVPlayerStateUnstarted;
-    }
-    else if ([stateString isEqualToString:kJVPlayerStateEndedCode])
-    {
-        state = kJVPlayerStateEnded;
-    }
-    else if ([stateString isEqualToString:kJVPlayerStatePlayingCode])
-    {
-        state = kJVPlayerStatePlaying;
-    }
-    else if ([stateString isEqualToString:kJVPlayerStatePausedCode])
-    {
-        state = kJVPlayerStatePaused;
-    }
-    else if ([stateString isEqualToString:kJVPlayerStateBufferingCode])
-    {
-        state = kJVPlayerStateBuffering;
-    }
-    else if ([stateString isEqualToString:kJVPlayerStateCuedCode])
-    {
-        state = kJVPlayerStateQueued;
-    }
-    
-    return state;
-}
-
-/**
- * Convert a state value from the typed value to NSString.
- *
- * @param quality A |JVPlayerState| parameter.
- * @return A string value to be used in the JavaScript bridge.
- */
-+ (NSString *)stringForPlayerState:(JVPlayerState)state
-{
-    switch (state) {
-        case kJVPlayerStateUnstarted:
-            return kJVPlayerStateUnstartedCode;
-        case kJVPlayerStateEnded:
-            return kJVPlayerStateEndedCode;
-        case kJVPlayerStatePlaying:
-            return kJVPlayerStatePlayingCode;
-        case kJVPlayerStatePaused:
-            return kJVPlayerStatePausedCode;
-        case kJVPlayerStateBuffering:
-            return kJVPlayerStateBufferingCode;
-        case kJVPlayerStateQueued:
-            return kJVPlayerStateCuedCode;
-        default:
-            return kJVPlayerStateUnknownCode;
-    }
-}
 
 #pragma mark - Private methods
+
+/**
+ * Protected method for loading both cases of playlist ID and array of video IDs. Loading
+ * a playlist automatically starts playback.
+ *
+ * @param cueingString A JavaScript string representing an array, playlist ID or list of
+ *                     video IDs to play with the playlist player.
+ * @param index 0-index position of video to start playback on.
+ * @param startSeconds Seconds after start of video to begin playback.
+ * @param suggestedQuality Suggested JVPlaybackQuality to play the videos.
+ * @return The result of cueing the playlist.
+ */
+- (void)loadPlaylist:(NSString *)cueingString index:(int)index startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
+{
+    NSNumber *indexValue = [NSNumber numberWithInt:index];
+    NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
+    NSString *qualityValue = [self.appHelper stringForPlaybackQuality:suggestedQuality];
+    NSString *command = [NSString stringWithFormat:@"player.loadPlaylist(%@, %@, %@, '%@');", cueingString, indexValue, startSecondsValue, qualityValue];
+    [self stringFromEvaluatingJavaScript:command];
+}
 
 /**
  * Private method to handle "navigation" to a callback URL of the format
@@ -732,7 +545,7 @@
     {
         if ([self.delegate respondsToSelector:@selector(playerView:didChangeToQuality:)])
         {
-            JVPlaybackQuality quality = [JVYoutubePlayer playbackQualityForString:data];
+            JVPlaybackQuality quality = [self.appHelper playbackQualityForString:data];
             [self.delegate playerView:self didChangeToQuality:quality];
         }
     }
@@ -866,65 +679,7 @@
 }
 
 /**
- * Private method for cueing both cases of playlist ID and array of video IDs. Cueing
- * a playlist does not start playback.
- *
- * @param cueingString A JavaScript string representing an array, playlist ID or list of
- *                     video IDs to play with the playlist player.
- * @param index 0-index position of video to start playback on.
- * @param startSeconds Seconds after start of video to begin playback.
- * @param suggestedQuality Suggested JVPlaybackQuality to play the videos.
- * @return The result of cueing the playlist.
- */
-- (void)cuePlaylist:(NSString *)cueingString index:(int)index startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
-{
-    NSNumber *indexValue = [NSNumber numberWithInt:index];
-    NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSString *qualityValue = [JVYoutubePlayer stringForPlaybackQuality:suggestedQuality];
-    NSString *command = [NSString stringWithFormat:@"player.cuePlaylist(%@, %@, %@, '%@');", cueingString, indexValue, startSecondsValue, qualityValue];
-    [self stringFromEvaluatingJavaScript:command];
-}
-
-/**
- * Private method for loading both cases of playlist ID and array of video IDs. Loading
- * a playlist automatically starts playback.
- *
- * @param cueingString A JavaScript string representing an array, playlist ID or list of
- *                     video IDs to play with the playlist player.
- * @param index 0-index position of video to start playback on.
- * @param startSeconds Seconds after start of video to begin playback.
- * @param suggestedQuality Suggested JVPlaybackQuality to play the videos.
- * @return The result of cueing the playlist.
- */
-- (void)loadPlaylist:(NSString *)cueingString index:(int)index startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
-{    
-    NSNumber *indexValue = [NSNumber numberWithInt:index];
-    NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSString *qualityValue = [JVYoutubePlayer stringForPlaybackQuality:suggestedQuality];
-    NSString *command = [NSString stringWithFormat:@"player.loadPlaylist(%@, %@, %@, '%@');", cueingString, indexValue, startSecondsValue, qualityValue];
-    [self stringFromEvaluatingJavaScript:command];
-}
-
-/**
- * Private helper method for converting an NSArray of video IDs into its JavaScript equivalent.
- *
- * @param videoIds An array of video ID strings to convert into JavaScript format.
- * @return A JavaScript array in String format containing video IDs.
- */
-- (NSString *)stringFromVideoIdArray:(NSArray *)videoIds
-{
-    NSMutableArray *formattedVideoIds = [[NSMutableArray alloc] init];
-
-    for (id unformattedId in videoIds)
-    {
-        [formattedVideoIds addObject:[NSString stringWithFormat:@"'%@'", unformattedId]];
-    }
-
-    return [NSString stringWithFormat:@"[%@]", [formattedVideoIds componentsJoinedByString:@", "]];
-}
-
-/**
- * Private method for evaluating JavaScript in the WebView.
+ * Protected method for evaluating JavaScript in the WebView.
  *
  * @param jsToExecute The JavaScript code in string format that we want to execute.
  * @return JavaScript response from evaluating code.
@@ -1112,7 +867,7 @@
     {
         if([self.loadPlayerDic[0] isEqualToString:@"loadPlayerWithVideosId"])
         {
-            [self loadPlaylist:[self stringFromVideoIdArray:self.loadPlayerDic[1]] index:0 startSeconds:0.0 suggestedQuality:kJVPlaybackQualityHD720];
+            [self loadPlaylist:[self.appHelper stringFromVideoIdArray:self.loadPlayerDic[1]] index:0 startSeconds:0.0 suggestedQuality:kJVPlaybackQualityHD720];
         }
     }
     
