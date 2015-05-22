@@ -1,53 +1,18 @@
-// Copyright 2014 Google Inc. All rights reserved.
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+//  JVYoutubePlayer.h
+//  YoutubePlayerDemo
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+//  Created by Jorge Valbuena on 2015-05-21.
+//  Copyright (c) 2015 com.jorgedeveloper. All rights reserved.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 
 #import <UIKit/UIKit.h>
+#import "JVEnums.h"
+#import "JVConstants.h"
 
-@class YTPlayerView;
+@class JVYoutubePlayer;
 
-/** These enums represent the state of the current video in the player. */
-typedef enum {
-    kYTPlayerStateUnstarted,
-    kYTPlayerStateEnded,
-    kYTPlayerStatePlaying,
-    kYTPlayerStatePaused,
-    kYTPlayerStateBuffering,
-    kYTPlayerStateQueued,
-    kYTPlayerStateUnknown
-} YTPlayerState;
-
-/** These enums represent the resolution of the currently loaded video. */
-typedef enum {
-    kYTPlaybackQualitySmall,
-    kYTPlaybackQualityMedium,
-    kYTPlaybackQualityLarge,
-    kYTPlaybackQualityHD720,
-    kYTPlaybackQualityHD1080,
-    kYTPlaybackQualityHighRes,
-    kYTPlaybackQualityUnknown /** This should never be returned. It is here for future proofing. */
-} YTPlaybackQuality;
-
-/** These enums represent error codes thrown by the player. */
-typedef enum {
-    kYTPlayerErrorInvalidParam,
-    kYTPlayerErrorHTML5Error,
-    kYTPlayerErrorVideoNotFound, // Functionally equivalent error codes 100 and
-    // 105 have been collapsed into |kYTPlayerErrorVideoNotFound|.
-    kYTPlayerErrorNotEmbeddable,
-    kYTPlayerErrorUnknown
-} YTPlayerError;
-
+#pragma mark - Player Protocol
 /**
  * A delegate for ViewControllers to respond to YouTube player events outside
  * of the view, such as changes to video playback state or playback errors.
@@ -55,9 +20,7 @@ typedef enum {
  * API. For the full documentation, see the JavaScript documentation here:
  *     https://developers.google.com/youtube/js_api_reference#Events
  */
-
-#pragma mark - Player Protocol
-@protocol YTPlayerViewDelegate<NSObject>
+@protocol JVYoutubePlayerDelegate <NSObject>
 
 @optional
 /**
@@ -65,7 +28,7 @@ typedef enum {
  *
  * @param playerView The YTPlayerView instance that has become ready.
  */
-- (void)playerViewDidBecomeReady:(YTPlayerView *)playerView;
+- (void)playerViewDidBecomeReady:(JVYoutubePlayer *)playerView;
 
 /**
  * Callback invoked when player state has changed, e.g. stopped or started playback.
@@ -73,7 +36,7 @@ typedef enum {
  * @param playerView The YTPlayerView instance where playback state has changed.
  * @param state YTPlayerState designating the new playback state.
  */
-- (void)playerView:(YTPlayerView *)playerView didChangeToState:(YTPlayerState)state;
+- (void)playerView:(JVYoutubePlayer *)playerView didChangeToState:(JVPlayerState)state;
 
 /**
  * Callback invoked when playback quality has changed.
@@ -81,7 +44,7 @@ typedef enum {
  * @param playerView The YTPlayerView instance where playback quality has changed.
  * @param quality YTPlaybackQuality designating the new playback quality.
  */
-- (void)playerView:(YTPlayerView *)playerView didChangeToQuality:(YTPlaybackQuality)quality;
+- (void)playerView:(JVYoutubePlayer *)playerView didChangeToQuality:(JVPlaybackQuality)quality;
 
 /**
  * Callback invoked when an error has occured.
@@ -89,8 +52,10 @@ typedef enum {
  * @param playerView The YTPlayerView instance where the error has occurred.
  * @param error YTPlayerError containing the error state.
  */
-- (void)playerView:(YTPlayerView *)playerView receivedError:(YTPlayerError)error;
+- (void)playerView:(JVYoutubePlayer *)playerView receivedError:(JVPlayerError)error;
+
 @end
+
 
 #pragma mark - Player Interface
 /**
@@ -100,7 +65,7 @@ typedef enum {
  * YTPlayerView::loadWithPlaylistId: or their variants to set the video or playlist
  * to populate the view with.
  */
-@interface YTPlayerView : UIView<NSObject,UIWebViewDelegate>
+@interface JVYoutubePlayer : UIView <NSObject, UIWebViewDelegate>
 
 // for more information visit https://developers.google.com/youtube/player_parameters
 @property (nonatomic) BOOL allowLandscapeMode;
@@ -168,7 +133,7 @@ typedef enum {
 @property(nonatomic, strong) UIWebView *webView;
 
 /** A delegate to be notified on playback events. */
-@property(nonatomic, weak) id<YTPlayerViewDelegate> delegate;
+@property(nonatomic, weak) id<JVYoutubePlayerDelegate> delegate;
 
 #pragma mark - Player Initializers
 /**
@@ -351,7 +316,7 @@ typedef enum {
  */
 - (void)cueVideoById:(NSString *)videoId
         startSeconds:(float)startSeconds
-    suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+    suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Cues a given video by its video ID for playback starting and ending at the given times
@@ -367,7 +332,7 @@ typedef enum {
 - (void)cueVideoById:(NSString *)videoId
         startSeconds:(float)startSeconds
           endSeconds:(float)endSeconds
-    suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+    suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Loads a given video by its video ID for playback starting at the given time and with the
@@ -381,7 +346,7 @@ typedef enum {
  */
 - (void)loadVideoById:(NSString *)videoId
          startSeconds:(float)startSeconds
-     suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+     suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Loads a given video by its video ID for playback starting and ending at the given times
@@ -397,7 +362,7 @@ typedef enum {
 - (void)loadVideoById:(NSString *)videoId
          startSeconds:(CGFloat)startSeconds
            endSeconds:(CGFloat)endSeconds
-     suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+     suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Cues a given video by its URL on YouTube.com for playback starting at the given time
@@ -411,7 +376,7 @@ typedef enum {
  */
 - (void)cueVideoByURL:(NSString *)videoURL
          startSeconds:(float)startSeconds
-     suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+     suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Cues a given video by its URL on YouTube.com for playback starting at the given time
@@ -427,7 +392,7 @@ typedef enum {
 - (void)cueVideoByURL:(NSString *)videoURL
          startSeconds:(float)startSeconds
            endSeconds:(float)endSeconds
-     suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+     suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Loads a given video by its video ID for playback starting at the given time
@@ -441,7 +406,7 @@ typedef enum {
  */
 - (void)loadVideoByURL:(NSString *)videoURL
           startSeconds:(float)startSeconds
-      suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+      suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Loads a given video by its video ID for playback starting and ending at the given times
@@ -457,7 +422,7 @@ typedef enum {
 - (void)loadVideoByURL:(NSString *)videoURL
           startSeconds:(float)startSeconds
             endSeconds:(float)endSeconds
-      suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+      suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 #pragma mark - Queuing functions for playlists
 
@@ -480,7 +445,7 @@ typedef enum {
 - (void)cuePlaylistByPlaylistId:(NSString *)playlistId
                           index:(int)index
                    startSeconds:(float)startSeconds
-               suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+               suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Cues a playlist of videos with the given video IDs. The |index| parameter specifies the
@@ -497,7 +462,7 @@ typedef enum {
 - (void)cuePlaylistByVideos:(NSArray *)videoIds
                       index:(int)index
                startSeconds:(float)startSeconds
-           suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+           suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Loads a given playlist with the given ID. The |index| parameter specifies the 0-indexed
@@ -514,7 +479,7 @@ typedef enum {
 - (void)loadPlaylistByPlaylistId:(NSString *)playlistId
                            index:(int)index
                     startSeconds:(float)startSeconds
-                suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+                suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Loads a playlist of videos with the given video IDs. The |index| parameter specifies the
@@ -531,7 +496,7 @@ typedef enum {
 - (void)loadPlaylistByVideos:(NSArray *)videoIds
                        index:(int)index
                 startSeconds:(float)startSeconds
-            suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+            suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 #pragma mark - Playing a video in a playlist
 
@@ -642,7 +607,7 @@ typedef enum {
  *
  * @return |YTPlayerState| representing the state of the player.
  */
-- (YTPlayerState)playerState;
+- (JVPlayerState)playerState;
 
 /**
  * Returns the elapsed time in seconds since the video started playing. This
@@ -666,7 +631,7 @@ typedef enum {
  *
  * @return YTPlaybackQuality representing the current playback quality.
  */
-- (YTPlaybackQuality)playbackQuality;
+- (JVPlaybackQuality)playbackQuality;
 
 /**
  * Suggests playback quality for the video. It is recommended to leave this setting to
@@ -675,7 +640,7 @@ typedef enum {
  *
  * @param quality YTPlaybackQuality value to suggest for the player.
  */
-- (void)setPlaybackQuality:(YTPlaybackQuality)suggestedQuality;
+- (void)setPlaybackQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Gets a list of the valid playback quality values, useful in conjunction with

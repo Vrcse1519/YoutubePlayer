@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YTPlayerView.h"
+#import "JVYoutubePlayer.h"
 
-@interface ViewController : UIViewController <YTPlayerViewDelegate>
+@interface ViewController : UIViewController <JVYoutubePlayerDelegate>
 
-@property (nonatomic, strong) YTPlayerView *player;
+@property (nonatomic, strong) JVYoutubePlayer *player;
 
 @end
 
