@@ -16,6 +16,7 @@
 		3CCC18401A414E0B00AFC7BF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCC18371A414E0B00AFC7BF /* main.m */; };
 		3CCC18411A414E0B00AFC7BF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCC18391A414E0B00AFC7BF /* ViewController.m */; };
 		3CCFC43F19FB1565000838B6 /* YoutubePlayerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCFC43E19FB1565000838B6 /* YoutubePlayerTests.m */; };
+		3CFEA1411B0FCB7600FD413F /* JVControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CFEA1401B0FCB7600FD413F /* JVControlsView.m */; };
 		A8B7659D1A4395E100D95B33 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CCC182D1A414E0B00AFC7BF /* LaunchScreen.xib */; };
 		A8B7659E1A4395E700D95B33 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3CCC182F1A414E0B00AFC7BF /* Main.storyboard */; };
 		A8EC7C6E1A43917D00E48DF6 /* ChameleonStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = A8EC7C651A43917D00E48DF6 /* ChameleonStatusBar.m */; };
@@ -57,6 +58,8 @@
 		3CCFC43819FB1565000838B6 /* YoutubePlayerDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YoutubePlayerDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CCFC43D19FB1565000838B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3CCFC43E19FB1565000838B6 /* YoutubePlayerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YoutubePlayerTests.m; sourceTree = "<group>"; };
+		3CFEA13F1B0FCB7600FD413F /* JVControlsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVControlsView.h; path = JVYoutubePlayer/JVControlsView.h; sourceTree = "<group>"; };
+		3CFEA1401B0FCB7600FD413F /* JVControlsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVControlsView.m; path = JVYoutubePlayer/JVControlsView.m; sourceTree = "<group>"; };
 		A8EC7C621A43917D00E48DF6 /* Chameleon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chameleon.h; sourceTree = "<group>"; };
 		A8EC7C631A43917D00E48DF6 /* ChameleonMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChameleonMacros.h; sourceTree = "<group>"; };
 		A8EC7C641A43917D00E48DF6 /* ChameleonStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChameleonStatusBar.h; sourceTree = "<group>"; };
@@ -98,6 +101,8 @@
 				3C25343C1B0F8628009146A5 /* JVEnums.h */,
 				3C28C00C1B0ED9F300F93290 /* JVYoutubePlayer.h */,
 				3C28C00D1B0ED9F300F93290 /* JVYoutubePlayer.m */,
+				3CFEA13F1B0FCB7600FD413F /* JVControlsView.h */,
+				3CFEA1401B0FCB7600FD413F /* JVControlsView.m */,
 			);
 			name = JVYoutubePlayer;
 			sourceTree = "<group>";
@@ -318,6 +323,7 @@
 			files = (
 				3CCC183A1A414E0B00AFC7BF /* AppDelegate.m in Sources */,
 				A8EC7C711A43917D00E48DF6 /* UIColor+CIELAB.m in Sources */,
+				3CFEA1411B0FCB7600FD413F /* JVControlsView.m in Sources */,
 				3C28C00F1B0ED9F300F93290 /* JVYoutubePlayer.m in Sources */,
 				3CCC183E1A414E0B00AFC7BF /* SphereMenu.m in Sources */,
 				A8EC7C701A43917D00E48DF6 /* UIColor+Chameleon.m in Sources */,
