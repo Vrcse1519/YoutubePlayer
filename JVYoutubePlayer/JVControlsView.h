@@ -10,4 +10,7 @@
 
 @interface JVControlsView : UIView
 
+// Initializers
+- (instancetype)initWithFrame:(CGRect)frame;
+
 @end

@@ -8,7 +8,7 @@
 
 #import "JVYoutubePlayer.h"
 #import "AppDelegate.h"
-
+#import "JVControlsView.h"
 
 #pragma mark - Player Interface
 @interface JVYoutubePlayer()
@@ -28,6 +28,8 @@
 @property (nonatomic, assign) BOOL isPlayerLoaded;
 
 @property (nonatomic, strong) NSMutableDictionary *dicParameters;
+
+@property (nonatomic, strong) JVControlsView *controlsView;
 
 @end
 
@@ -749,7 +751,10 @@
 {
     // creating webview for youtube player
     if(!_webView || !_webView.window)
+    {
         [self addSubview:self.webView];
+        [self.webView addSubview:self.controlsView];
+    }
     
     // preserving users frame
     self.prevFrame = self.frame;
@@ -1087,6 +1092,16 @@
     }
     
     return _webView;
+}
+
+- (JVControlsView *)controlsView
+{
+    if(!_controlsView)
+    {
+        _controlsView = [[JVControlsView alloc] initWithFrame:self.bounds];
+    }
+    
+    return _controlsView;
 }
 
 - (NSMutableDictionary*)dicParameters
