@@ -10,6 +10,10 @@
 		3C2534401B0F8628009146A5 /* JVContants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C25343B1B0F8628009146A5 /* JVContants.m */; };
 		3C28C00E1B0ED9F300F93290 /* JVYoutubePlayer-iFrame.html in Resources */ = {isa = PBXBuildFile; fileRef = 3C28C00B1B0ED9F300F93290 /* JVYoutubePlayer-iFrame.html */; };
 		3C28C00F1B0ED9F300F93290 /* JVYoutubePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C28C00D1B0ED9F300F93290 /* JVYoutubePlayer.m */; };
+		3C3D1B891B12E92A0039DB76 /* jvpause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C3D1B851B12E92A0039DB76 /* jvpause@2x.png */; };
+		3C3D1B8A1B12E92A0039DB76 /* jvplay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C3D1B861B12E92A0039DB76 /* jvplay@2x.png */; };
+		3C3D1B8E1B12ED550039DB76 /* jvnext@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C3D1B8C1B12ED550039DB76 /* jvnext@2x.png */; };
+		3C3D1B8F1B12ED550039DB76 /* jvprevious@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C3D1B8D1B12ED550039DB76 /* jvprevious@2x.png */; };
 		3CCC183A1A414E0B00AFC7BF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCC182C1A414E0B00AFC7BF /* AppDelegate.m */; };
 		3CCC183D1A414E0B00AFC7BF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CCC18311A414E0B00AFC7BF /* Images.xcassets */; };
 		3CCC183E1A414E0B00AFC7BF /* SphereMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCC18341A414E0B00AFC7BF /* SphereMenu.m */; };
@@ -43,6 +47,10 @@
 		3C28C00B1B0ED9F300F93290 /* JVYoutubePlayer-iFrame.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "JVYoutubePlayer-iFrame.html"; path = "JVYoutubePlayer/JVYoutubePlayer-iFrame.html"; sourceTree = "<group>"; };
 		3C28C00C1B0ED9F300F93290 /* JVYoutubePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVYoutubePlayer.h; path = JVYoutubePlayer/JVYoutubePlayer.h; sourceTree = "<group>"; };
 		3C28C00D1B0ED9F300F93290 /* JVYoutubePlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVYoutubePlayer.m; path = JVYoutubePlayer/JVYoutubePlayer.m; sourceTree = "<group>"; };
+		3C3D1B851B12E92A0039DB76 /* jvpause@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "jvpause@2x.png"; path = "JVYoutubePlayer/images/jvpause@2x.png"; sourceTree = "<group>"; };
+		3C3D1B861B12E92A0039DB76 /* jvplay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "jvplay@2x.png"; path = "JVYoutubePlayer/images/jvplay@2x.png"; sourceTree = "<group>"; };
+		3C3D1B8C1B12ED550039DB76 /* jvnext@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "jvnext@2x.png"; path = "JVYoutubePlayer/images/jvnext@2x.png"; sourceTree = "<group>"; };
+		3C3D1B8D1B12ED550039DB76 /* jvprevious@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "jvprevious@2x.png"; path = "JVYoutubePlayer/images/jvprevious@2x.png"; sourceTree = "<group>"; };
 		3CCC182B1A414E0B00AFC7BF /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3CCC182C1A414E0B00AFC7BF /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		3CCC182E1A414E0B00AFC7BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -95,6 +103,7 @@
 		3C28C00A1B0ED9E400F93290 /* JVYoutubePlayer */ = {
 			isa = PBXGroup;
 			children = (
+				3C3D1B771B12DBD70039DB76 /* images */,
 				3C28C00B1B0ED9F300F93290 /* JVYoutubePlayer-iFrame.html */,
 				3C25343A1B0F8628009146A5 /* JVConstants.h */,
 				3C25343B1B0F8628009146A5 /* JVContants.m */,
@@ -105,6 +114,17 @@
 				3CFEA1401B0FCB7600FD413F /* JVControlsView.m */,
 			);
 			name = JVYoutubePlayer;
+			sourceTree = "<group>";
+		};
+		3C3D1B771B12DBD70039DB76 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				3C3D1B8C1B12ED550039DB76 /* jvnext@2x.png */,
+				3C3D1B8D1B12ED550039DB76 /* jvprevious@2x.png */,
+				3C3D1B851B12E92A0039DB76 /* jvpause@2x.png */,
+				3C3D1B861B12E92A0039DB76 /* jvplay@2x.png */,
+			);
+			name = images;
 			sourceTree = "<group>";
 		};
 		3C7B43F31A00680500A92BAF /* YoutubePlayer */ = {
@@ -301,9 +321,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				A8B7659E1A4395E700D95B33 /* Main.storyboard in Resources */,
+				3C3D1B8E1B12ED550039DB76 /* jvnext@2x.png in Resources */,
+				3C3D1B8A1B12E92A0039DB76 /* jvplay@2x.png in Resources */,
+				3C3D1B8F1B12ED550039DB76 /* jvprevious@2x.png in Resources */,
 				3C28C00E1B0ED9F300F93290 /* JVYoutubePlayer-iFrame.html in Resources */,
 				A8B7659D1A4395E100D95B33 /* LaunchScreen.xib in Resources */,
 				3CCC183D1A414E0B00AFC7BF /* Images.xcassets in Resources */,
+				3C3D1B891B12E92A0039DB76 /* jvpause@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

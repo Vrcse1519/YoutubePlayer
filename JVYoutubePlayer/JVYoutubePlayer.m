@@ -11,7 +11,7 @@
 #import "JVControlsView.h"
 
 #pragma mark - Player Interface
-@interface JVYoutubePlayer()
+@interface JVYoutubePlayer() <JVControlsViewDelegate>
 
 // for screen sizes
 @property (nonatomic) CGSize screenRect;
@@ -1075,6 +1075,29 @@
 }
 
 
+#pragma mark - ControlsView delegate
+
+- (void)playButtonWasPressed:(JVControlsView *)jvControlsView
+{
+    [self playVideo];
+}
+
+- (void)pauseButtonWasPressed:(JVControlsView *)jvControlsView
+{
+    [self pauseVideo];
+}
+
+- (void)previousButtonWasPressed:(JVControlsView *)jvControlsView
+{
+    [self previousVideo];
+}
+
+- (void)nextButtonWasPressed:(JVControlsView *)jvControlsView
+{
+    [self nextVideo];
+}
+
+
 #pragma mark - Custom getters
 
 - (UIWebView *)webView
@@ -1099,6 +1122,7 @@
     if(!_controlsView)
     {
         _controlsView = [[JVControlsView alloc] initWithFrame:self.bounds];
+        _controlsView.delegate = self;
     }
     
     return _controlsView;
