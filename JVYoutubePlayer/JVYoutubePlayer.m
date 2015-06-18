@@ -60,7 +60,7 @@
         return [self loadPlayerWithVideoId:videosId[0]];
     }
     
-    return nil;
+    return NO;
 }
 
 - (BOOL)loadPlayerWithVideoId:(NSString *)videoId
@@ -76,7 +76,7 @@
         return [self loadPlayerWithVideoId:videosId[0]];
     }
     
-    return nil;
+    return NO;
 }
 
 - (BOOL)loadPlayerWithPlaylistId:(NSString *)playlistId
@@ -759,6 +759,9 @@
     // preserving users frame
     self.prevFrame = self.frame;
     
+    NSLog(@"\n\n1)original frame -> %@\n\n", NSStringFromCGRect(self.frame));
+    NSLog(@"\n\n1)prev frame -> %@\n\n", NSStringFromCGRect(self.prevFrame));
+    
     NSDictionary *playerCallbacks = @{
         @"onReady" : @"onReady",
         @"onStateChange" : @"onStateChange",
@@ -1053,12 +1056,21 @@
         self.screenRect = [[UIScreen mainScreen] bounds].size;
         self.screenHeight = self.screenRect.height;
         self.screenWidth = self.screenRect.width;
-        
+ 
+        [self.controlsView hideViewAnimated];
         self.frame = CGRectMake(0, 0, self.screenWidth, self.screenHeight);
+        [self.controlsView updateViewOnRotationWithFrame:self.bounds];
     }
     else if(device.orientation == UIDeviceOrientationPortrait)
     {
+        NSLog(@"\n\n2)original frame -> %@\n\n", NSStringFromCGRect(self.frame));
+        NSLog(@"\n\n2)prev frame -> %@\n\n", NSStringFromCGRect(self.prevFrame));
+        
+        [self.controlsView hideViewAnimated];
+        
         self.frame = self.prevFrame;
+        
+        [self.controlsView updateViewOnRotationWithFrame:self.bounds];
     }
     else if (device.orientation == UIDeviceOrientationPortraitUpsideDown)
     {

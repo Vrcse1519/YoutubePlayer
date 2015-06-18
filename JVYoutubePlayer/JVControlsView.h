@@ -32,4 +32,9 @@
 // Initializers
 - (instancetype)initWithFrame:(CGRect)frame;
 
+- (void)showViewAnimated;
+- (void)hideViewAnimated;
+
+- (void)updateViewOnRotationWithFrame:(CGRect)frame;
+
 @end

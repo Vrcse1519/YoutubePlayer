@@ -44,14 +44,16 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
     // [self.player loadPlayerWithVideoURL:@"https://www.youtube.com/watch?v=mIAgmyoAmmc"];
     
     // loading multiple videos from url
-    // NSArray *videosUrl = @[@"https://www.youtube.com/watch?v=Zv1QV6lrc_Y", @"https://www.youtube.com/watch?v=NVGEMZ_1ETs"];
-    // [self.player loadPlayerWithVideosURL:videosUrl];
+//     NSArray *videosUrl = @[@"https://www.youtube.com/watch?v=Zv1QV6lrc_Y", @"https://www.youtube.com/watch?v=NVGEMZ_1ETs"];
+//     [self.player loadPlayerWithVideosURL:videosUrl];
 
+    [self.player loadPlayerWithVideosId:@[@"Zv1QV6lrc_Y", @"NVGEMZ_1ETs"]];
+    
     // loading videoId
     // [self.player loadPlayerWithVideoId:@"O8TiugM6Jg"];
 
     // loading playlist to video player
-     [self.player loadPlayerWithPlaylistId:@"PLEE58C6029A8A6ADE"];
+//     [self.player loadPlayerWithPlaylistId:@"PLEE58C6029A8A6ADE"];
     
     // loading a set of videos to the player
     // NSArray *videoList = @[@"O8TiugM6Jg", @"NVGEMZ_1ETs"];
@@ -63,6 +65,12 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
     // adding controls menu to view
     [self.view addSubview:self.sphereMenu];
     
+//    NSURL *youtubeURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/_ONqHM40WdQ/0.jpg"]];
+//    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:youtubeURL]]];
+//    imageView.frame = self.player.frame;
+//    [self.view addSubview:imageView];
+    
+    // adding audio session
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     [audioSession setActive:YES error:nil];
     
@@ -183,6 +191,7 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
         _player.playsinline = NO;
         _player.fullscreen = YES;
         _player.playsinline = YES;
+        _player.autohide = YES;
         _player.showinfo = NO;
         _player.controls = YES;
     }

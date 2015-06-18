@@ -132,7 +132,7 @@
     [self addSubview:self.previousBtn];
     [self addSubview:self.nextBtn];
     
-    [UIView animateWithDuration:0.4
+    [UIView animateWithDuration:0.15
                      animations:^{
                          
                          self.alpha = 1.0;
@@ -147,7 +147,7 @@
 - (void)hideViewAnimated
 {
     // hidding controls animations
-    [UIView animateWithDuration:0.4
+    [UIView animateWithDuration:0.15
                      animations:^{
         
                          self.alpha = 0;
@@ -162,6 +162,18 @@
                          self.controlsShowing = NO;
                          self.alpha = 1.0;
                      }];
+}
+
+- (void)updateViewOnRotationWithFrame:(CGRect)frame
+{
+    if(self.window) {
+        [self hideViewAnimated];
+        self.frame = frame;
+    }
+    
+    self.playBtn.frame = CGRectMake(self.frame.size.width/2-BUTTON_SIZE/2, self.frame.size.height/2-BUTTON_SIZE/2, BUTTON_SIZE, BUTTON_SIZE);
+    self.previousBtn.frame = CGRectMake(40, self.frame.size.height/2-BUTTON_SIZE/2, BUTTON_SIZE, BUTTON_SIZE);
+    self.nextBtn.frame = CGRectMake(self.frame.size.width-BUTTON_SIZE-40, self.frame.size.height/2-BUTTON_SIZE/2, BUTTON_SIZE, BUTTON_SIZE);
 }
 
 
