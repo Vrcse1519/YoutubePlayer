@@ -435,10 +435,9 @@
 	red *= 0.2126f; green *= 0.7152f; blue *= 0.0722f;
     luminance = red + green + blue;
     
-    if (flat == NO) {
+    if (flat == NO)
+    {
         return (luminance > 0.5f) ? rgba(0, 0, 0, alpha) : rgba(255, 255, 255, alpha);
-    } else {
-        return (luminance > 0.5f) ? hsba(0, 0, 15, alpha) : hsba(192, 2, 95, alpha);
     }
     
     return (luminance > 0.5f) ? [UIColor flatBlackColorDark] : [UIColor flatWhiteColor];

@@ -47,13 +47,13 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
 //     NSArray *videosUrl = @[@"https://www.youtube.com/watch?v=Zv1QV6lrc_Y", @"https://www.youtube.com/watch?v=NVGEMZ_1ETs"];
 //     [self.player loadPlayerWithVideosURL:videosUrl];
 
-    [self.player loadPlayerWithVideosId:@[@"Zv1QV6lrc_Y", @"NVGEMZ_1ETs"]];
+//    [self.player loadPlayerWithVideosId:@[@"Zv1QV6lrc_Y", @"NVGEMZ_1ETs"]];
     
     // loading videoId
     // [self.player loadPlayerWithVideoId:@"O8TiugM6Jg"];
 
     // loading playlist to video player
-//     [self.player loadPlayerWithPlaylistId:@"PLEE58C6029A8A6ADE"];
+     [self.player loadPlayerWithPlaylistId:@"PLEE58C6029A8A6ADE"];
     
     // loading a set of videos to the player
     // NSArray *videoList = @[@"O8TiugM6Jg", @"NVGEMZ_1ETs"];
@@ -193,7 +193,7 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
         _player.playsinline = YES;
         _player.autohide = YES;
         _player.showinfo = NO;
-        _player.controls = YES;
+        _player.controls = NO;
     }
     
     return _player;
