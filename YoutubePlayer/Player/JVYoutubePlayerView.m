@@ -29,6 +29,8 @@
 
 @property (nonatomic, strong) NSMutableDictionary *dicParameters;
 
+@property (nonatomic, assign) BOOL isPlayerInBackground;
+
 @end
 
 #pragma mark - Player Implementation
@@ -156,20 +158,25 @@
 - (void)playVideo
 {
     if(self.playerWithTimer)
+    {
         [self schedulePauseVideo];
+    }
     
     [self stringFromEvaluatingJavaScript:@"player.playVideo();"];
 }
+
 
 - (void)pauseVideo
 {
     [self stringFromEvaluatingJavaScript:@"player.pauseVideo();"];
 }
 
+
 - (void)stopVideo
 {
     [self stringFromEvaluatingJavaScript:@"player.stopVideo();"];
 }
+
 
 - (void)seekToSeconds:(float)seekToSeconds allowSeekAhead:(BOOL)allowSeekAhead
 {
@@ -179,15 +186,18 @@
     [self stringFromEvaluatingJavaScript:command];
 }
 
+
 - (void)clearVideo
 {
     [self stringFromEvaluatingJavaScript:@"player.clearVideo();"];
 }
 
+
 - (void)schedulePauseVideo
 {
     [self performSelector:@selector(pauseVideo) withObject:self afterDelay:self.stopTimer];
 }
+
 
 #pragma mark - Cueing methods
 
@@ -483,26 +493,31 @@
     // logging state of video
     NSLog(@"***** Checking Loading -> %@", request.URL.absoluteString);
 
-    //TODO: move this to actual method
-//    if (self.allowBackgroundPlayback && [request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=2"])
-//    {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [self playVideo]; // play video if goes into background
-//        });
-//    }
+    if (self.isPlayerInBackground && self.allowBackgroundPlayback && ([request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=1"] || [request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=2"] || [request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=3"]))
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self playVideo];
+        });
+        
+        return YES;
+    }
     
     // adding timer to pause video at giving time
     if ([request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=1"])
     {
         if(self.playerWithTimer)
+        {
             [self schedulePauseVideo];
+        }
     }
     
     // forcing video to autoplay
     if ([request.URL.absoluteString isEqualToString:@"ytplayer://onReady?data=null"])
     {
         if(self.autoplay)
+        {
             [self playVideo];
+        }
     }
     
     // if found an error skip to next video
@@ -511,7 +526,8 @@
         [self nextVideo]; // play next video if current can't be played
     }
     
-    if (self.allowLandscapeMode) {
+    if (self.allowLandscapeMode)
+    {
         // allows youtube player in landscape mode
         if ([request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=3"])
         {
@@ -809,6 +825,7 @@
     if(!_webView || !_webView.window)
     {
         [self addSubview:self.webView];
+        [self addObservers];
     }
     
     // preserving users frame
@@ -871,6 +888,7 @@
 
     return YES;
 }
+
 
 /**
  * Private method for cueing both cases of playlist ID and array of video IDs. Cueing
@@ -965,9 +983,10 @@
 - (void)dealloc
 {
     // removing notification center
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 }
+
 
 - (void)webViewDidFinishLoad:(UIWebView*)webView
 {
@@ -1074,6 +1093,57 @@
         
         [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
     }
+}
+
+
+#pragma mark - Notifications
+
+- (void)addObservers
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerViewDidEnterBackground:)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerViewWillResignActive:)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerViewWillEnterForeground:)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerViewDidBecomeActive:)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+    
+}
+
+
+- (void)playerViewDidEnterBackground:(NSNotification *)notification
+{
+    self.isPlayerInBackground = YES;
+}
+
+
+- (void)playerViewWillResignActive:(NSNotification *)notification
+{
+    self.isPlayerInBackground = YES;
+}
+
+
+- (void)playerViewWillEnterForeground:(NSNotification *)notification
+{
+    self.isPlayerInBackground = NO;
+}
+
+
+- (void)playerViewDidBecomeActive:(NSNotification *)notification
+{
+    self.isPlayerInBackground = NO;
 }
 
 

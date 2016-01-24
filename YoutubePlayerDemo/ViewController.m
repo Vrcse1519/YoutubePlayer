@@ -64,16 +64,6 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
     // adding controls menu to view
     [self.view addSubview:self.sphereMenu];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(appIsInBakcground:)
-                                                 name:UIApplicationDidEnterBackgroundNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(appWillBeInBakcground:)
-                                                 name:UIApplicationWillResignActiveNotification
-                                               object:nil];
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -249,7 +239,7 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
 
 - (void)appIsInBakcground:(NSNotification *)notification
 {
-    [self.player playVideo];
+//    [self.player playVideo];
 }
 
 - (void)appWillBeInBakcground:(NSNotification *)notification
@@ -272,5 +262,68 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
         self.timer = nil;
     }
 }
+
+
+#pragma mark - testing request to youtube
+
+- (void)requestSerachVideo
+{
+    // Set up your URL
+    NSString *youtubeApi = @"https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=house&key=AIzaSyDJA2UzTIn6py0Zf4U_88h73e4h-L9gLzs";
+    NSURL *url = [[NSURL alloc] initWithString:youtubeApi];
+
+    // Create your request
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+
+    // Send the request asynchronously
+    [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+        
+        // Callback, parse the data and check for errors
+        if (data && !connectionError)
+        {
+            NSError *jsonError;
+            NSDictionary *jsonResult = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&jsonError];
+            
+            if (!jsonError)
+            {
+                NSLog(@"Response from YouTube: %@", jsonResult);
+            }
+        }
+    }];
+    
+    // from yelp
+//    NSURLRequest *searchRequest = [self searchRequestWithQuery:@"deep house"];
+//    NSURLSession *session = [NSURLSession sharedSession];
+//    
+//    [[session dataTaskWithRequest:searchRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+//        
+//        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+//
+//        if (!error && httpResponse.statusCode == kStatusCode)
+//        {
+//            NSDictionary *searchResponseJSON = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+//            NSLog(@"response %@", searchResponseJSON);
+//        }
+//        else
+//        {
+//            NSLog(@"error: %@", error);
+//        }
+//    }]
+//     resume];
+}
+
+// sample from http://stackoverflow.com/questions/30290483/how-to-use-youtube-api-v3-in-ios
+//https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2C+snippet%2C+statistics&id=AKiiekaEHhI&key={AIzaSyCVE43_3JbRU4qLPC7I4FGAQ0bdSELYEwU}
+//- (NSURLRequest *)searchRequestWithQuery:(NSString *)query
+//{
+//    NSDictionary *parameters = @{@"part" : @"contentDetails+snippet+statistics",
+//                                 @"id" : @"AKiiekaEHhI",
+//                                 @"q": query,
+//                                 @"maxResults": @"10"};
+//    
+//    NSURLRequest *request = [NSURLRequest requestWithHost:@"www.googleapis.com/youtube" path:@"/v3/videos" parameters:parameters];
+//    
+//    return request;
+//}
 
 @end
