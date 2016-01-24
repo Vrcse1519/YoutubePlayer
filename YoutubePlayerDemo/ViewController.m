@@ -11,6 +11,7 @@
 #import "SphereMenu.h"
 #import "Chameleon.h"
 
+
 #define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
@@ -84,6 +85,8 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
     
     // Set itself as the first responder
     [self becomeFirstResponder];
+    
+    [self requestSerachVideo];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -122,7 +125,7 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
         switch (receivedEvent.subtype) {
                 
             case UIEventSubtypeRemoteControlTogglePlayPause:
-                if(self.player.playerState == kYTPlayerStatePaused || self.player.playerState == kYTPlayerStateEnded || self.player.playerState == kYTPlayerStateUnstarted || self.player.playerState == kYTPlayerStateUnknown || self.player.playerState == kYTPlayerStateQueued || self.player.playerState == kYTPlayerStateBuffering)
+                if(self.player.playerState == kJVPlayerStatePaused || self.player.playerState == kJVPlayerStateEnded || self.player.playerState == kJVPlayerStateUnstarted || self.player.playerState == kJVPlayerStateUnknown || self.player.playerState == kJVPlayerStateQueued || self.player.playerState == kJVPlayerStateBuffering)
                 {
                     [self.player playVideo];
                 }
@@ -149,11 +152,11 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
 #pragma mark -
 #pragma mark Getters and Setters
 
-- (YTPlayerView *)player
+- (JVYoutubePlayerView *)player
 {
     if(!_player)
     {
-        _player = [[YTPlayerView alloc] initWithFrame:CGRectMake(0, 50, self.view.bounds.size.width, 234)];
+        _player = [[JVYoutubePlayerView alloc] initWithFrame:CGRectMake(0, 50, self.view.bounds.size.width, 234)];
         _player.delegate = self;
         _player.autoplay = NO;
         _player.modestbranding = YES;
@@ -190,9 +193,9 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
 #pragma mark -
 #pragma mark Player delegates
 
-- (void)playerView:(YTPlayerView *)playerView didChangeToQuality:(YTPlaybackQuality)quality
+- (void)playerView:(JVYoutubePlayerView *)playerView didChangeToQuality:(JVPlaybackQuality)quality
 {
-    [_player setPlaybackQuality:kYTPlaybackQualityHD720];
+    [_player setPlaybackQuality:kJVPlaybackQualityHD720];
 }
 
 //- (void)playerView:(YTPlayerView *)playerView receivedError:(YTPlayerError)error
@@ -208,7 +211,7 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
 {
     if(index == 1)
     {
-        if(self.player.playerState == kYTPlayerStatePaused || self.player.playerState == kYTPlayerStateEnded || self.player.playerState == kYTPlayerStateUnstarted || self.player.playerState == kYTPlayerStateUnknown || self.player.playerState == kYTPlayerStateQueued || self.player.playerState == kYTPlayerStateBuffering)
+        if(self.player.playerState == kJVPlayerStatePaused || self.player.playerState == kJVPlayerStateEnded || self.player.playerState == kJVPlayerStateUnstarted || self.player.playerState == kJVPlayerStateUnknown || self.player.playerState == kJVPlayerStateQueued || self.player.playerState == kJVPlayerStateBuffering)
         {
             [self.player playVideo];
         }
@@ -234,11 +237,11 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
     return UIStatusBarStyleLightContent;
 }
 
-- (void)playerViewDidBecomeReady:(YTPlayerView *)playerView
+- (void)playerViewDidBecomeReady:(JVYoutubePlayerView *)playerView
 {
     // loading a set of videos to the player after the player has finished loading
     // NSArray *videoList = @[@"m2d0ID-V9So", @"c7lNU4IPYlk"];
-    // [self.player loadPlaylistByVideos:videoList index:0 startSeconds:0.0 suggestedQuality:kYTPlaybackQualityHD720];
+    // [self.player loadPlaylistByVideos:videoList index:0 startSeconds:0.0 suggestedQuality:kJVPlaybackQualityHD720];
 }
 
 #pragma mark -

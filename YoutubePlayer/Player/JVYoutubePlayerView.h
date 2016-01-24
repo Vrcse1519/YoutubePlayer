@@ -1,53 +1,17 @@
-// Copyright 2014 Google Inc. All rights reserved.
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+//  JVYoutubePlayerView.h
+//  YoutubePlayerDemo
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+//  Created by Jorge Valbuena on 2016-01-24.
+//  Copyright © 2016 com.jorgedeveloper. All rights reserved.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 
 #import <UIKit/UIKit.h>
+#import "JVPlayerConstants.h"
 
 
-@class YTPlayerView;
+@class JVYoutubePlayerView;
 
-/** These enums represent the state of the current video in the player. */
-typedef enum {
-    kYTPlayerStateUnstarted,
-    kYTPlayerStateEnded,
-    kYTPlayerStatePlaying,
-    kYTPlayerStatePaused,
-    kYTPlayerStateBuffering,
-    kYTPlayerStateQueued,
-    kYTPlayerStateUnknown
-} YTPlayerState;
-
-/** These enums represent the resolution of the currently loaded video. */
-typedef enum {
-    kYTPlaybackQualitySmall,
-    kYTPlaybackQualityMedium,
-    kYTPlaybackQualityLarge,
-    kYTPlaybackQualityHD720,
-    kYTPlaybackQualityHD1080,
-    kYTPlaybackQualityHighRes,
-    kYTPlaybackQualityUnknown /** This should never be returned. It is here for future proofing. */
-} YTPlaybackQuality;
-
-/** These enums represent error codes thrown by the player. */
-typedef enum {
-    kYTPlayerErrorInvalidParam,
-    kYTPlayerErrorHTML5Error,
-    kYTPlayerErrorVideoNotFound, // Functionally equivalent error codes 100 and
-    // 105 have been collapsed into |kYTPlayerErrorVideoNotFound|.
-    kYTPlayerErrorNotEmbeddable,
-    kYTPlayerErrorUnknown
-} YTPlayerError;
 
 /**
  * A delegate for ViewControllers to respond to YouTube player events outside
@@ -58,50 +22,50 @@ typedef enum {
  */
 
 #pragma mark - Player Protocol
-@protocol YTPlayerViewDelegate<NSObject>
+@protocol JVYoutubePlayerDelegate<NSObject>
 
 @optional
 /**
  * Invoked when the player view is ready to receive API calls.
  *
- * @param playerView The YTPlayerView instance that has become ready.
+ * @param playerView The JVYoutubePlayerView instance that has become ready.
  */
-- (void)playerViewDidBecomeReady:(YTPlayerView *)playerView;
+- (void)playerViewDidBecomeReady:(JVYoutubePlayerView *)playerView;
 
 /**
  * Callback invoked when player state has changed, e.g. stopped or started playback.
  *
- * @param playerView The YTPlayerView instance where playback state has changed.
- * @param state YTPlayerState designating the new playback state.
+ * @param playerView The JVYoutubePlayerView instance where playback state has changed.
+ * @param state JVPlayerState designating the new playback state.
  */
-- (void)playerView:(YTPlayerView *)playerView didChangeToState:(YTPlayerState)state;
+- (void)playerView:(JVYoutubePlayerView *)playerView didChangeToState:(JVPlayerState)state;
 
 /**
  * Callback invoked when playback quality has changed.
  *
- * @param playerView The YTPlayerView instance where playback quality has changed.
- * @param quality YTPlaybackQuality designating the new playback quality.
+ * @param playerView The JVYoutubePlayerView instance where playback quality has changed.
+ * @param quality JVPlaybackQuality designating the new playback quality.
  */
-- (void)playerView:(YTPlayerView *)playerView didChangeToQuality:(YTPlaybackQuality)quality;
+- (void)playerView:(JVYoutubePlayerView *)playerView didChangeToQuality:(JVPlaybackQuality)quality;
 
 /**
  * Callback invoked when an error has occured.
  *
- * @param playerView The YTPlayerView instance where the error has occurred.
- * @param error YTPlayerError containing the error state.
+ * @param playerView The JVYoutubePlayerView instance where the error has occurred.
+ * @param error JVPlayerError containing the error state.
  */
-- (void)playerView:(YTPlayerView *)playerView receivedError:(YTPlayerError)error;
+- (void)playerView:(JVYoutubePlayerView *)playerView receivedError:(JVPlayerError)error;
 @end
 
 #pragma mark - Player Interface
 /**
- * YTPlayerView is a custom UIView that client developers will use to include YouTube
+ * JVYoutubePlayerView is a custom UIView that client developers will use to include YouTube
  * videos in their iOS applications. It can be instantiated programmatically, or via
- * Interface Builder. Use the methods YTPlayerView::loadWithVideoId:,
- * YTPlayerView::loadWithPlaylistId: or their variants to set the video or playlist
+ * Interface Builder. Use the methods JVYoutubePlayerView::loadWithVideoId:,
+ * JVYoutubePlayerView::loadWithPlaylistId: or their variants to set the video or playlist
  * to populate the view with.
  */
-@interface YTPlayerView : UIView<NSObject, UIWebViewDelegate>
+@interface JVYoutubePlayerView : UIView <NSObject, UIWebViewDelegate>
 
 // for more information visit https://developers.google.com/youtube/player_parameters
 @property (nonatomic) BOOL allowLandscapeMode;
@@ -171,17 +135,17 @@ typedef enum {
 @property(nonatomic, strong) UIWebView *webView;
 
 /** A delegate to be notified on playback events. */
-@property(nonatomic, weak) id<YTPlayerViewDelegate> delegate;
+@property(nonatomic, weak) id<JVYoutubePlayerDelegate> delegate;
 
 #pragma mark - Player Initializers
 /**
  * This method loads the player with the given video url.
- * This is a convenience method for calling YTPlayerView::loadPlayerWithVideoId:withPlayerVars:
+ * This is a convenience method for calling JVYoutubePlayerView::loadPlayerWithVideoId:withPlayerVars:
  * without player variables.
  *
  * This method reloads the entire contents of the UIWebView and regenerates its HTML contents.
  * To change the currently loaded video without reloading the entire UIWebView, use the
- * YTPlayerView::cueVideoById:startSeconds:suggestedQuality: family of methods.
+ * JVYoutubePlayerView::cueVideoById:startSeconds:suggestedQuality: family of methods.
  *
  * @param videoURL The YouTube video url of the video to load in the player view.
  * @return YES if player has been configured correctly, NO otherwise.
@@ -190,12 +154,12 @@ typedef enum {
 
 /**
  * This method loads the player with the given videos urls.
- * This is a convenience method for calling YTPlayerView::loadPlayerWithVideoId:withPlayerVars:
+ * This is a convenience method for calling JVYoutubePlayerView::loadPlayerWithVideoId:withPlayerVars:
  * without player variables.
  *
  * This method reloads the entire contents of the UIWebView and regenerates its HTML contents.
  * To change the currently loaded video without reloading the entire UIWebView, use the
- * YTPlayerView::cueVideoById:startSeconds:suggestedQuality: family of methods.
+ * JVYoutubePlayerView::cueVideoById:startSeconds:suggestedQuality: family of methods.
  *
  * @param videosURL The YouTube videos urls of the videos to load in the player view.
  * @return YES if player has been configured correctly, NO otherwise.
@@ -204,12 +168,12 @@ typedef enum {
 
 /**
  * This method loads the player with the given video ID.
- * This is a convenience method for calling YTPlayerView::loadPlayerWithVideoId:withPlayerVars:
+ * This is a convenience method for calling JVYoutubePlayerView::loadPlayerWithVideoId:withPlayerVars:
  * without player variables.
  *
  * This method reloads the entire contents of the UIWebView and regenerates its HTML contents.
  * To change the currently loaded video without reloading the entire UIWebView, use the
- * YTPlayerView::cueVideoById:startSeconds:suggestedQuality: family of methods.
+ * JVYoutubePlayerView::cueVideoById:startSeconds:suggestedQuality: family of methods.
  *
  * @param videoId The YouTube video ID of the video to load in the player view.
  * @return YES if player has been configured correctly, NO otherwise.
@@ -218,12 +182,12 @@ typedef enum {
 
 /**
  * This method loads the player with the given videos IDs.
- * This is a convenience method for calling YTPlayerView::loadPlayerWithVideoId:withPlayerVars:
+ * This is a convenience method for calling JVYoutubePlayerView::loadPlayerWithVideoId:withPlayerVars:
  * without player variables.
  *
  * This method reloads the entire contents of the UIWebView and regenerates its HTML contents.
  * To change the currently loaded video without reloading the entire UIWebView, use the
- * YTPlayerView::cueVideoById:startSeconds:suggestedQuality: family of methods.
+ * JVYoutubePlayerView::cueVideoById:startSeconds:suggestedQuality: family of methods.
  *
  * @param videosId The YouTube videos IDs of the videos to load in the player view.
  * @return YES if player has been configured correctly, NO otherwise.
@@ -232,12 +196,12 @@ typedef enum {
 
 /**
  * This method loads the player with the given playlist ID.
- * This is a convenience method for calling YTPlayerView::loadWithPlaylistId:withPlayerVars:
+ * This is a convenience method for calling JVYoutubePlayerView::loadWithPlaylistId:withPlayerVars:
  * without player variables.
  *
  * This method reloads the entire contents of the UIWebView and regenerates its HTML contents.
  * To change the currently loaded video without reloading the entire UIWebView, use the
- * YTPlayerView::cuePlaylistByPlaylistId:index:startSeconds:suggestedQuality:
+ * JVYoutubePlayerView::cuePlaylistByPlaylistId:index:startSeconds:suggestedQuality:
  * family of methods.
  *
  * @param playlistId The YouTube playlist ID of the playlist to load in the player view.
@@ -260,7 +224,7 @@ typedef enum {
  *
  * This method reloads the entire contents of the UIWebView and regenerates its HTML contents.
  * To change the currently loaded video without reloading the entire UIWebView, use the
- * YTPlayerView::cueVideoById:startSeconds:suggestedQuality: family of methods.
+ * JVYoutubePlayerView::cueVideoById:startSeconds:suggestedQuality: family of methods.
  *
  * @param videoId The YouTube video ID of the video to load in the player view.
  * @param playerVars An NSDictionary of player parameters.
@@ -283,7 +247,7 @@ typedef enum {
  *
  * This method reloads the entire contents of the UIWebView and regenerates its HTML contents.
  * To change the currently loaded video without reloading the entire UIWebView, use the
- * YTPlayerView::cuePlaylistByPlaylistId:index:startSeconds:suggestedQuality:
+ * JVYoutubePlayerView::cuePlaylistByPlaylistId:index:startSeconds:suggestedQuality:
  * family of methods.
  *
  * @param playlistId The YouTube playlist ID of the playlist to load in the player view.
@@ -349,12 +313,12 @@ typedef enum {
  *    https://developers.google.com/youtube/iframe_api_reference#cueVideoById
  *
  * @param videoId A video ID to cue.
- * @param startSeconds Time in seconds to start the video when YTPlayerView::playVideo is called.
- * @param suggestedQuality YTPlaybackQuality value suggesting a playback quality.
+ * @param startSeconds Time in seconds to start the video when JVYoutubePlayerView::playVideo is called.
+ * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
  */
 - (void)cueVideoById:(NSString *)videoId
         startSeconds:(float)startSeconds
-    suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+    suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Cues a given video by its video ID for playback starting and ending at the given times
@@ -365,12 +329,12 @@ typedef enum {
  * @param videoId A video ID to cue.
  * @param startSeconds Time in seconds to start the video when playVideo() is called.
  * @param endSeconds Time in seconds to end the video after it begins playing.
- * @param suggestedQuality YTPlaybackQuality value suggesting a playback quality.
+ * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
  */
 - (void)cueVideoById:(NSString *)videoId
         startSeconds:(float)startSeconds
           endSeconds:(float)endSeconds
-    suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+    suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Loads a given video by its video ID for playback starting at the given time and with the
@@ -380,11 +344,11 @@ typedef enum {
  *
  * @param videoId A video ID to load and begin playing.
  * @param startSeconds Time in seconds to start the video when it has loaded.
- * @param suggestedQuality YTPlaybackQuality value suggesting a playback quality.
+ * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
  */
 - (void)loadVideoById:(NSString *)videoId
          startSeconds:(float)startSeconds
-     suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+     suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Loads a given video by its video ID for playback starting and ending at the given times
@@ -395,12 +359,12 @@ typedef enum {
  * @param videoId A video ID to load and begin playing.
  * @param startSeconds Time in seconds to start the video when it has loaded.
  * @param endSeconds Time in seconds to end the video after it begins playing.
- * @param suggestedQuality YTPlaybackQuality value suggesting a playback quality.
+ * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
  */
 - (void)loadVideoById:(NSString *)videoId
          startSeconds:(CGFloat)startSeconds
            endSeconds:(CGFloat)endSeconds
-     suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+     suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Cues a given video by its URL on YouTube.com for playback starting at the given time
@@ -409,12 +373,12 @@ typedef enum {
  *    https://developers.google.com/youtube/iframe_api_reference#cueVideoByUrl
  *
  * @param videoURL URL of a YouTube video to cue for playback.
- * @param startSeconds Time in seconds to start the video when YTPlayerView::playVideo is called.
- * @param suggestedQuality YTPlaybackQuality value suggesting a playback quality.
+ * @param startSeconds Time in seconds to start the video when JVYoutubePlayerView::playVideo is called.
+ * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
  */
 - (void)cueVideoByURL:(NSString *)videoURL
          startSeconds:(float)startSeconds
-     suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+     suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Cues a given video by its URL on YouTube.com for playback starting at the given time
@@ -423,14 +387,14 @@ typedef enum {
  *    https://developers.google.com/youtube/iframe_api_reference#cueVideoByUrl
  *
  * @param videoURL URL of a YouTube video to cue for playback.
- * @param startSeconds Time in seconds to start the video when YTPlayerView::playVideo is called.
+ * @param startSeconds Time in seconds to start the video when JVYoutubePlayerView::playVideo is called.
  * @param endSeconds Time in seconds to end the video after it begins playing.
- * @param suggestedQuality YTPlaybackQuality value suggesting a playback quality.
+ * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
  */
 - (void)cueVideoByURL:(NSString *)videoURL
          startSeconds:(float)startSeconds
            endSeconds:(float)endSeconds
-     suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+     suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Loads a given video by its video ID for playback starting at the given time
@@ -440,11 +404,11 @@ typedef enum {
  *
  * @param videoURL URL of a YouTube video to load and play.
  * @param startSeconds Time in seconds to start the video when it has loaded.
- * @param suggestedQuality YTPlaybackQuality value suggesting a playback quality.
+ * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
  */
 - (void)loadVideoByURL:(NSString *)videoURL
           startSeconds:(float)startSeconds
-      suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+      suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Loads a given video by its video ID for playback starting and ending at the given times
@@ -455,12 +419,12 @@ typedef enum {
  * @param videoURL URL of a YouTube video to load and play.
  * @param startSeconds Time in seconds to start the video when it has loaded.
  * @param endSeconds Time in seconds to end the video after it begins playing.
- * @param suggestedQuality YTPlaybackQuality value suggesting a playback quality.
+ * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
  */
 - (void)loadVideoByURL:(NSString *)videoURL
           startSeconds:(float)startSeconds
             endSeconds:(float)endSeconds
-      suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+      suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 #pragma mark - Queuing functions for playlists
 
@@ -477,13 +441,13 @@ typedef enum {
  *
  * @param playlistId Playlist ID of a YouTube playlist to cue.
  * @param index A 0-indexed position specifying the first video to play.
- * @param startSeconds Time in seconds to start the video when YTPlayerView::playVideo is called.
- * @param suggestedQuality YTPlaybackQuality value suggesting a playback quality.
+ * @param startSeconds Time in seconds to start the video when JVYoutubePlayerView::playVideo is called.
+ * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
  */
 - (void)cuePlaylistByPlaylistId:(NSString *)playlistId
                           index:(int)index
                    startSeconds:(float)startSeconds
-               suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+               suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Cues a playlist of videos with the given video IDs. The |index| parameter specifies the
@@ -494,13 +458,13 @@ typedef enum {
  *
  * @param videoIds An NSArray of video IDs to compose the playlist of.
  * @param index A 0-indexed position specifying the first video to play.
- * @param startSeconds Time in seconds to start the video when YTPlayerView::playVideo is called.
- * @param suggestedQuality YTPlaybackQuality value suggesting a playback quality.
+ * @param startSeconds Time in seconds to start the video when JVYoutubePlayerView::playVideo is called.
+ * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
  */
 - (void)cuePlaylistByVideos:(NSArray *)videoIds
                       index:(int)index
                startSeconds:(float)startSeconds
-           suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+           suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Loads a given playlist with the given ID. The |index| parameter specifies the 0-indexed
@@ -511,13 +475,13 @@ typedef enum {
  *
  * @param playlistId Playlist ID of a YouTube playlist to cue.
  * @param index A 0-indexed position specifying the first video to play.
- * @param startSeconds Time in seconds to start the video when YTPlayerView::playVideo is called.
- * @param suggestedQuality YTPlaybackQuality value suggesting a playback quality.
+ * @param startSeconds Time in seconds to start the video when JVYoutubePlayerView::playVideo is called.
+ * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
  */
 - (void)loadPlaylistByPlaylistId:(NSString *)playlistId
                            index:(int)index
                     startSeconds:(float)startSeconds
-                suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+                suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Loads a playlist of videos with the given video IDs. The |index| parameter specifies the
@@ -528,13 +492,13 @@ typedef enum {
  *
  * @param videoIds An NSArray of video IDs to compose the playlist of.
  * @param index A 0-indexed position specifying the first video to play.
- * @param startSeconds Time in seconds to start the video when YTPlayerView::playVideo is called.
- * @param suggestedQuality YTPlaybackQuality value suggesting a playback quality.
+ * @param startSeconds Time in seconds to start the video when JVYoutubePlayerView::playVideo is called.
+ * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
  */
 - (void)loadPlaylistByVideos:(NSArray *)videoIds
                        index:(int)index
                 startSeconds:(float)startSeconds
-            suggestedQuality:(YTPlaybackQuality)suggestedQuality;
+            suggestedQuality:(JVPlaybackQuality)suggestedQuality;
 
 #pragma mark - Playing a video in a playlist
 
@@ -582,7 +546,7 @@ typedef enum {
  * Sets the playback rate. The default value is 1.0, which represents a video
  * playing at normal speed. Other values may include 0.25 or 0.5 for slower
  * speeds, and 1.5 or 2.0 for faster speeds. To fetch a list of valid values for
- * this method, call YTPlayerView::getAvailablePlaybackRates. This method does not
+ * this method, call JVYoutubePlayerView::getAvailablePlaybackRates. This method does not
  * guarantee that the playback rate will change.
  * This method corresponds to the JavaScript API defined here:
  *   https://developers.google.com/youtube/iframe_api_reference#setPlaybackRate
@@ -593,7 +557,7 @@ typedef enum {
 
 /**
  * Gets a list of the valid playback rates, useful in conjunction with
- * YTPlayerView::setPlaybackRate. This method corresponds to the
+ * JVYoutubePlayerView::setPlaybackRate. This method corresponds to the
  * JavaScript API defined here:
  *   https://developers.google.com/youtube/iframe_api_reference#getPlaybackRate
  *
@@ -643,9 +607,9 @@ typedef enum {
  * JavaScript API defined here:
  *   https://developers.google.com/youtube/iframe_api_reference#getPlayerState
  *
- * @return |YTPlayerState| representing the state of the player.
+ * @return |JVPlayerState| representing the state of the player.
  */
-- (YTPlayerState)playerState;
+- (JVPlayerState)playerState;
 
 /**
  * Returns the elapsed time in seconds since the video started playing. This
@@ -667,22 +631,22 @@ typedef enum {
  * JavaScript API defined here:
  *   https://developers.google.com/youtube/iframe_api_reference#getPlaybackQuality
  *
- * @return YTPlaybackQuality representing the current playback quality.
+ * @return JVPlaybackQuality representing the current playback quality.
  */
-- (YTPlaybackQuality)playbackQuality;
+- (JVPlaybackQuality)playbackQuality;
 
 /**
  * Suggests playback quality for the video. It is recommended to leave this setting to
  * |default|. This method corresponds to the JavaScript API defined here:
  *   https://developers.google.com/youtube/iframe_api_reference#setPlaybackQuality
  *
- * @param quality YTPlaybackQuality value to suggest for the player.
+ * @param quality JVPlaybackQuality value to suggest for the player.
  */
-- (void)setPlaybackQuality:(YTPlaybackQuality)suggestedQuality;
+- (void)setPlaybackQuality:(JVPlaybackQuality)suggestedQuality;
 
 /**
  * Gets a list of the valid playback quality values, useful in conjunction with
- * YTPlayerView::setPlaybackQuality. This method corresponds to the
+ * JVYoutubePlayerView::setPlaybackQuality. This method corresponds to the
  * JavaScript API defined here:
  *   https://developers.google.com/youtube/iframe_api_reference#getAvailableQualityLevels
  *

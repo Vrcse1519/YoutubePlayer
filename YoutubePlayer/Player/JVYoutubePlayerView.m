@@ -1,63 +1,18 @@
-// Copyright 2014 Google Inc. All rights reserved.
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+//  JVYoutubePlayerView.m
+//  YoutubePlayerDemo
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+//  Created by Jorge Valbuena on 2016-01-24.
+//  Copyright © 2016 com.jorgedeveloper. All rights reserved.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 
-#import "YTPlayerView.h"
+#import "JVYoutubePlayerView.h"
 #import "AppDelegate.h"
+#import "JVYoutubePlayerConstants.h"
 
-#define IS_OS_6_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 6.0)
-#define IS_OS_8_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-
-// These are instances of NSString because we get them from parsing a URL. It would be silly to
-// convert these into an integer just to have to convert the URL query string value into an integer
-// as well for the sake of doing a value comparison. A full list of response error codes can be
-// found here:
-//      https://developers.google.com/youtube/iframe_api_reference
-NSString static *const kYTPlayerStateUnstartedCode = @"-1";
-NSString static *const kYTPlayerStateEndedCode = @"0";
-NSString static *const kYTPlayerStatePlayingCode = @"1";
-NSString static *const kYTPlayerStatePausedCode = @"2";
-NSString static *const kYTPlayerStateBufferingCode = @"3";
-NSString static *const kYTPlayerStateCuedCode = @"5";
-NSString static *const kYTPlayerStateUnknownCode = @"unknown";
-
-// Constants representing playback quality.
-NSString static *const kYTPlaybackQualitySmallQuality = @"small";
-NSString static *const kYTPlaybackQualityMediumQuality = @"medium";
-NSString static *const kYTPlaybackQualityLargeQuality = @"large";
-NSString static *const kYTPlaybackQualityHD720Quality = @"hd720";
-NSString static *const kYTPlaybackQualityHD1080Quality = @"hd1080";
-NSString static *const kYTPlaybackQualityHighResQuality = @"highres";
-NSString static *const kYTPlaybackQualityUnknownQuality = @"unknown";
-
-// Constants representing YouTube player errors.
-NSString static *const kYTPlayerErrorInvalidParamErrorCode = @"2";
-NSString static *const kYTPlayerErrorHTML5ErrorCode = @"5";
-NSString static *const kYTPlayerErrorVideoNotFoundErrorCode = @"100";
-NSString static *const kYTPlayerErrorNotEmbeddableErrorCode = @"101";
-NSString static *const kYTPlayerErrorCannotFindVideoErrorCode = @"105";
-
-// Constants representing player callbacks.
-NSString static *const kYTPlayerCallbackOnReady = @"onReady";
-NSString static *const kYTPlayerCallbackOnStateChange = @"onStateChange";
-NSString static *const kYTPlayerCallbackOnPlaybackQualityChange = @"onPlaybackQualityChange";
-NSString static *const kYTPlayerCallbackOnError = @"onError";
-NSString static *const kYTPlayerCallbackOnYouTubeIframeAPIReady = @"onYouTubeIframeAPIReady";
-
-NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtube.com/embed/(.*)$";
 
 #pragma mark - Player Interface
-@interface YTPlayerView()
+@interface JVYoutubePlayerView()
 
 // for screen sizes
 @property (nonatomic) CGSize screenRect;
@@ -77,7 +32,7 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 @end
 
 #pragma mark - Player Implementation
-@implementation YTPlayerView
+@implementation JVYoutubePlayerView
 
 @synthesize allowLandscapeMode = _allowLandscapeMode;
 @synthesize forceBackToPortraitMode = _forceBackToPortraitMode;
@@ -236,102 +191,102 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 #pragma mark - Cueing methods
 
-- (void)cueVideoById:(NSString *)videoId startSeconds:(float)startSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)cueVideoById:(NSString *)videoId startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
 {
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
+    NSString *qualityValue = [JVYoutubePlayerView stringForPlaybackQuality:suggestedQuality];
     NSString *command = [NSString stringWithFormat:@"player.cueVideoById('%@', %@, '%@');", videoId, startSecondsValue, qualityValue];
     [self stringFromEvaluatingJavaScript:command];
 }
 
-- (void)cueVideoById:(NSString *)videoId startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)cueVideoById:(NSString *)videoId startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
 {
     self.playerWithTimer = YES;
     self.stopTimer = endSeconds+1;
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
     NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
-    NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
+    NSString *qualityValue = [JVYoutubePlayerView stringForPlaybackQuality:suggestedQuality];
     NSString *command = [NSString stringWithFormat:@"player.cueVideoById('%@', %@, %@, '%@');", videoId, startSecondsValue, endSecondsValue, qualityValue];
     [self stringFromEvaluatingJavaScript:command];
 }
 
-- (void)loadVideoById:(NSString *)videoId startSeconds:(float)startSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)loadVideoById:(NSString *)videoId startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
 {
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
+    NSString *qualityValue = [JVYoutubePlayerView stringForPlaybackQuality:suggestedQuality];
     NSString *command = [NSString stringWithFormat:@"player.loadVideoById('%@', %@, '%@');", videoId, startSecondsValue, qualityValue];
     [self stringFromEvaluatingJavaScript:command];
 }
 
-- (void)loadVideoById:(NSString *)videoId startSeconds:(CGFloat)startSeconds endSeconds:(CGFloat)endSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)loadVideoById:(NSString *)videoId startSeconds:(CGFloat)startSeconds endSeconds:(CGFloat)endSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
 {
     self.playerWithTimer = YES;
     self.stopTimer = endSeconds+1;
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
     NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
-    NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
+    NSString *qualityValue = [JVYoutubePlayerView stringForPlaybackQuality:suggestedQuality];
     NSString *command = [NSString stringWithFormat:@"player.loadVideoById('%@', %@, %@, '%@');", videoId, startSecondsValue, endSecondsValue, qualityValue];
     [self stringFromEvaluatingJavaScript:command];
 }
 
-- (void)cueVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)cueVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
 {
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
+    NSString *qualityValue = [JVYoutubePlayerView stringForPlaybackQuality:suggestedQuality];
     NSString *command = [NSString stringWithFormat:@"player.cueVideoByUrl('%@', %@, '%@');", videoURL, startSecondsValue, qualityValue];
     [self stringFromEvaluatingJavaScript:command];
 }
 
-- (void)cueVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)cueVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
 {
     self.playerWithTimer = YES;
     self.stopTimer = endSeconds+1;
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
     NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
-    NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
+    NSString *qualityValue = [JVYoutubePlayerView stringForPlaybackQuality:suggestedQuality];
     NSString *command = [NSString stringWithFormat:@"player.cueVideoByUrl('%@', %@, %@, '%@');", videoURL, startSecondsValue, endSecondsValue, qualityValue];
     [self stringFromEvaluatingJavaScript:command];
 }
 
-- (void)loadVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)loadVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
 {
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
+    NSString *qualityValue = [JVYoutubePlayerView stringForPlaybackQuality:suggestedQuality];
     NSString *command = [NSString stringWithFormat:@"player.loadVideoByUrl('%@', %@, '%@');", videoURL, startSecondsValue, qualityValue];
     [self stringFromEvaluatingJavaScript:command];
 }
 
-- (void)loadVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)loadVideoByURL:(NSString *)videoURL startSeconds:(float)startSeconds endSeconds:(float)endSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
 {
     self.playerWithTimer = YES;
     self.stopTimer = endSeconds+1;
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
     NSNumber *endSecondsValue = [NSNumber numberWithFloat:endSeconds];
-    NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
+    NSString *qualityValue = [JVYoutubePlayerView stringForPlaybackQuality:suggestedQuality];
     NSString *command = [NSString stringWithFormat:@"player.loadVideoByUrl('%@', %@, %@, '%@');", videoURL, startSecondsValue, endSecondsValue, qualityValue];
     [self stringFromEvaluatingJavaScript:command];
 }
 
 #pragma mark - Cueing methods for lists
 
-- (void)cuePlaylistByPlaylistId:(NSString *)playlistId index:(int)index startSeconds:(float)startSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)cuePlaylistByPlaylistId:(NSString *)playlistId index:(int)index startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
 {
     NSString *playlistIdString = [NSString stringWithFormat:@"'%@'", playlistId];
     [self cuePlaylist:playlistIdString index:index startSeconds:startSeconds suggestedQuality:suggestedQuality];
 }
 
-- (void)cuePlaylistByVideos:(NSArray *)videoIds index:(int)index startSeconds:(float)startSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)cuePlaylistByVideos:(NSArray *)videoIds index:(int)index startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
 {
     [self cuePlaylist:[self stringFromVideoIdArray:videoIds] index:index startSeconds:startSeconds suggestedQuality:suggestedQuality];
 }
 
-- (void)loadPlaylistByPlaylistId:(NSString *)playlistId index:(int)index startSeconds:(float)startSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)loadPlaylistByPlaylistId:(NSString *)playlistId index:(int)index startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
 {
     NSString *playlistIdString = [NSString stringWithFormat:@"'%@'", playlistId];
     [self loadPlaylist:playlistIdString index:index startSeconds:startSeconds suggestedQuality:suggestedQuality];
 }
 
-- (void)loadPlaylistByVideos:(NSArray *)videoIds index:(int)index startSeconds:(float)startSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)loadPlaylistByVideos:(NSArray *)videoIds index:(int)index startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
 {
     [self loadPlaylist:[self stringFromVideoIdArray:videoIds] index:index startSeconds:startSeconds suggestedQuality:suggestedQuality];
 }
@@ -391,10 +346,10 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
     return [[self stringFromEvaluatingJavaScript:@"player.getVideoLoadedFraction();"] floatValue];
 }
 
-- (YTPlayerState)playerState
+- (JVPlayerState)playerState
 {
     NSString *returnValue = [self stringFromEvaluatingJavaScript:@"player.getPlayerState();"];
-    return [YTPlayerView playerStateForString:returnValue];
+    return [JVYoutubePlayerView playerStateForString:returnValue];
 }
 
 - (float)currentTime
@@ -403,15 +358,15 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 }
 
 // Playback quality
-- (YTPlaybackQuality)playbackQuality
+- (JVPlaybackQuality)playbackQuality
 {
     NSString *qualityValue = [self stringFromEvaluatingJavaScript:@"player.getPlaybackQuality();"];
-    return [YTPlayerView playbackQualityForString:qualityValue];
+    return [JVYoutubePlayerView playbackQualityForString:qualityValue];
 }
 
-- (void)setPlaybackQuality:(YTPlaybackQuality)suggestedQuality
+- (void)setPlaybackQuality:(JVPlaybackQuality)suggestedQuality
 {
-    NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
+    NSString *qualityValue = [JVYoutubePlayerView stringForPlaybackQuality:suggestedQuality];
     NSString *command = [NSString stringWithFormat:@"player.setPlaybackQuality('%@');", qualityValue];
     [self stringFromEvaluatingJavaScript:command];
 }
@@ -516,7 +471,7 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
     NSMutableArray *levels = [[NSMutableArray alloc] init];
     for (NSString *rawQualityValue in rawQualityValues) {
-        YTPlaybackQuality quality = [YTPlayerView playbackQualityForString:rawQualityValue];
+        JVPlaybackQuality quality = [JVYoutubePlayerView playbackQualityForString:rawQualityValue];
         [levels addObject:[NSNumber numberWithInt:quality]];
     }
     
@@ -527,13 +482,14 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 {
     // logging state of video
     NSLog(@"***** Checking Loading -> %@", request.URL.absoluteString);
-    
-    if (self.allowBackgroundPlayback && [request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=2"])
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self playVideo]; // play video if goes into background
-        });
-    }
+
+    //TODO: move this to actual method
+//    if (self.allowBackgroundPlayback && [request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=2"])
+//    {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self playVideo]; // play video if goes into background
+//        });
+//    }
     
     // adding timer to pause video at giving time
     if ([request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=1"])
@@ -589,61 +545,61 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
  * @param qualityString A string representing playback quality. Ex: "small", "medium", "hd1080".
  * @return An enum value representing the playback quality.
  */
-+ (YTPlaybackQuality)playbackQualityForString:(NSString *)qualityString
++ (JVPlaybackQuality)playbackQualityForString:(NSString *)qualityString
 {
-    YTPlaybackQuality quality = kYTPlaybackQualityUnknown;
+    JVPlaybackQuality quality = kJVPlaybackQualityUnknown;
 
-    if ([qualityString isEqualToString:kYTPlaybackQualitySmallQuality])
+    if ([qualityString isEqualToString:kJVPlaybackQualitySmallQuality])
     {
-        quality = kYTPlaybackQualitySmall;
+        quality = kJVPlaybackQualitySmall;
     }
-    else if ([qualityString isEqualToString:kYTPlaybackQualityMediumQuality])
+    else if ([qualityString isEqualToString:kJVPlaybackQualityMediumQuality])
     {
-        quality = kYTPlaybackQualityMedium;
+        quality = kJVPlaybackQualityMedium;
     }
-    else if ([qualityString isEqualToString:kYTPlaybackQualityLargeQuality])
+    else if ([qualityString isEqualToString:kJVPlaybackQualityLargeQuality])
     {
-        quality = kYTPlaybackQualityLarge;
+        quality = kJVPlaybackQualityLarge;
     }
-    else if ([qualityString isEqualToString:kYTPlaybackQualityHD720Quality])
+    else if ([qualityString isEqualToString:kJVPlaybackQualityHD720Quality])
     {
-        quality = kYTPlaybackQualityHD720;
+        quality = kJVPlaybackQualityHD720;
     }
-    else if ([qualityString isEqualToString:kYTPlaybackQualityHD1080Quality])
+    else if ([qualityString isEqualToString:kJVPlaybackQualityHD1080Quality])
     {
-        quality = kYTPlaybackQualityHD1080;
+        quality = kJVPlaybackQualityHD1080;
     }
-    else if ([qualityString isEqualToString:kYTPlaybackQualityHighResQuality])
+    else if ([qualityString isEqualToString:kJVPlaybackQualityHighResQuality])
     {
-        quality = kYTPlaybackQualityHighRes;
+        quality = kJVPlaybackQualityHighRes;
     }
 
     return quality;
 }
 
 /**
- * Convert a |YTPlaybackQuality| value from the typed value to NSString.
+ * Convert a |JVPlaybackQuality| value from the typed value to NSString.
  *
- * @param quality A |YTPlaybackQuality| parameter.
+ * @param quality A |JVPlaybackQuality| parameter.
  * @return An |NSString| value to be used in the JavaScript bridge.
  */
-+ (NSString *)stringForPlaybackQuality:(YTPlaybackQuality)quality
++ (NSString *)stringForPlaybackQuality:(JVPlaybackQuality)quality
 {
     switch (quality) {
-        case kYTPlaybackQualitySmall:
-            return kYTPlaybackQualitySmallQuality;
-        case kYTPlaybackQualityMedium:
-            return kYTPlaybackQualityMediumQuality;
-        case kYTPlaybackQualityLarge:
-            return kYTPlaybackQualityLargeQuality;
-        case kYTPlaybackQualityHD720:
-            return kYTPlaybackQualityHD720Quality;
-        case kYTPlaybackQualityHD1080:
-            return kYTPlaybackQualityHD1080Quality;
-        case kYTPlaybackQualityHighRes:
-            return kYTPlaybackQualityHighResQuality;
+        case kJVPlaybackQualitySmall:
+            return kJVPlaybackQualitySmallQuality;
+        case kJVPlaybackQualityMedium:
+            return kJVPlaybackQualityMediumQuality;
+        case kJVPlaybackQualityLarge:
+            return kJVPlaybackQualityLargeQuality;
+        case kJVPlaybackQualityHD720:
+            return kJVPlaybackQualityHD720Quality;
+        case kJVPlaybackQualityHD1080:
+            return kJVPlaybackQualityHD1080Quality;
+        case kJVPlaybackQualityHighRes:
+            return kJVPlaybackQualityHighResQuality;
         default:
-            return kYTPlaybackQualityUnknownQuality;
+            return kJVPlaybackQualityUnknownQuality;
     }
 }
 
@@ -653,33 +609,33 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
  * @param stateString A string representing player state. Ex: "-1", "0", "1".
  * @return An enum value representing the player state.
  */
-+ (YTPlayerState)playerStateForString:(NSString *)stateString
++ (JVPlayerState)playerStateForString:(NSString *)stateString
 {
-    YTPlayerState state = kYTPlayerStateUnknown;
+    JVPlayerState state = kJVPlayerStateUnknown;
     
-    if ([stateString isEqualToString:kYTPlayerStateUnstartedCode])
+    if ([stateString isEqualToString:kJVPlayerStateUnstartedCode])
     {
-        state = kYTPlayerStateUnstarted;
+        state = kJVPlayerStateUnstarted;
     }
-    else if ([stateString isEqualToString:kYTPlayerStateEndedCode])
+    else if ([stateString isEqualToString:kJVPlayerStateEndedCode])
     {
-        state = kYTPlayerStateEnded;
+        state = kJVPlayerStateEnded;
     }
-    else if ([stateString isEqualToString:kYTPlayerStatePlayingCode])
+    else if ([stateString isEqualToString:kJVPlayerStatePlayingCode])
     {
-        state = kYTPlayerStatePlaying;
+        state = kJVPlayerStatePlaying;
     }
-    else if ([stateString isEqualToString:kYTPlayerStatePausedCode])
+    else if ([stateString isEqualToString:kJVPlayerStatePausedCode])
     {
-        state = kYTPlayerStatePaused;
+        state = kJVPlayerStatePaused;
     }
-    else if ([stateString isEqualToString:kYTPlayerStateBufferingCode])
+    else if ([stateString isEqualToString:kJVPlayerStateBufferingCode])
     {
-        state = kYTPlayerStateBuffering;
+        state = kJVPlayerStateBuffering;
     }
-    else if ([stateString isEqualToString:kYTPlayerStateCuedCode])
+    else if ([stateString isEqualToString:kJVPlayerStateCuedCode])
     {
-        state = kYTPlayerStateQueued;
+        state = kJVPlayerStateQueued;
     }
     
     return state;
@@ -688,26 +644,26 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 /**
  * Convert a state value from the typed value to NSString.
  *
- * @param quality A |YTPlayerState| parameter.
+ * @param quality A |JVPlayerState| parameter.
  * @return A string value to be used in the JavaScript bridge.
  */
-+ (NSString *)stringForPlayerState:(YTPlayerState)state
++ (NSString *)stringForPlayerState:(JVPlayerState)state
 {
     switch (state) {
-        case kYTPlayerStateUnstarted:
-            return kYTPlayerStateUnstartedCode;
-        case kYTPlayerStateEnded:
-            return kYTPlayerStateEndedCode;
-        case kYTPlayerStatePlaying:
-            return kYTPlayerStatePlayingCode;
-        case kYTPlayerStatePaused:
-            return kYTPlayerStatePausedCode;
-        case kYTPlayerStateBuffering:
-            return kYTPlayerStateBufferingCode;
-        case kYTPlayerStateQueued:
-            return kYTPlayerStateCuedCode;
+        case kJVPlayerStateUnstarted:
+            return kJVPlayerStateUnstartedCode;
+        case kJVPlayerStateEnded:
+            return kJVPlayerStateEndedCode;
+        case kJVPlayerStatePlaying:
+            return kJVPlayerStatePlayingCode;
+        case kJVPlayerStatePaused:
+            return kJVPlayerStatePausedCode;
+        case kJVPlayerStateBuffering:
+            return kJVPlayerStateBufferingCode;
+        case kJVPlayerStateQueued:
+            return kJVPlayerStateCuedCode;
         default:
-            return kYTPlayerStateUnknownCode;
+            return kJVPlayerStateUnknownCode;
     }
 }
 
@@ -734,7 +690,7 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
         data = [query componentsSeparatedByString:@"="][1];
     }
 
-    if ([action isEqual:kYTPlayerCallbackOnReady])
+    if ([action isEqual:kJVPlayerCallbackOnReady])
     {
         self.isPlayerLoaded = YES;
         
@@ -743,69 +699,69 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
             [self.delegate playerViewDidBecomeReady:self];
         }
     }
-    else if ([action isEqual:kYTPlayerCallbackOnStateChange])
+    else if ([action isEqual:kJVPlayerCallbackOnStateChange])
     {
         if ([self.delegate respondsToSelector:@selector(playerView:didChangeToState:)])
         {
-            YTPlayerState state = kYTPlayerStateUnknown;
+            JVPlayerState state = kJVPlayerStateUnknown;
 
-            if ([data isEqual:kYTPlayerStateEndedCode])
+            if ([data isEqual:kJVPlayerStateEndedCode])
             {
-                state = kYTPlayerStateEnded;
+                state = kJVPlayerStateEnded;
             }
-            else if ([data isEqual:kYTPlayerStatePlayingCode])
+            else if ([data isEqual:kJVPlayerStatePlayingCode])
             {
-                state = kYTPlayerStatePlaying;
+                state = kJVPlayerStatePlaying;
             }
-            else if ([data isEqual:kYTPlayerStatePausedCode])
+            else if ([data isEqual:kJVPlayerStatePausedCode])
             {
-                state = kYTPlayerStatePaused;
+                state = kJVPlayerStatePaused;
             }
-            else if ([data isEqual:kYTPlayerStateBufferingCode])
+            else if ([data isEqual:kJVPlayerStateBufferingCode])
             {
-                state = kYTPlayerStateBuffering;
+                state = kJVPlayerStateBuffering;
             }
-            else if ([data isEqual:kYTPlayerStateCuedCode])
+            else if ([data isEqual:kJVPlayerStateCuedCode])
             {
-                state = kYTPlayerStateQueued;
+                state = kJVPlayerStateQueued;
             }
-            else if ([data isEqual:kYTPlayerStateUnstartedCode])
+            else if ([data isEqual:kJVPlayerStateUnstartedCode])
             {
-                state = kYTPlayerStateUnstarted;
+                state = kJVPlayerStateUnstarted;
             }
 
             [self.delegate playerView:self didChangeToState:state];
         }
     }
-    else if ([action isEqual:kYTPlayerCallbackOnPlaybackQualityChange])
+    else if ([action isEqual:kJVPlayerCallbackOnPlaybackQualityChange])
     {
         if ([self.delegate respondsToSelector:@selector(playerView:didChangeToQuality:)])
         {
-            YTPlaybackQuality quality = [YTPlayerView playbackQualityForString:data];
+            JVPlaybackQuality quality = [JVYoutubePlayerView playbackQualityForString:data];
             [self.delegate playerView:self didChangeToQuality:quality];
         }
     }
-    else if ([action isEqual:kYTPlayerCallbackOnError])
+    else if ([action isEqual:kJVPlayerCallbackOnError])
     {
         if ([self.delegate respondsToSelector:@selector(playerView:receivedError:)])
         {
-            YTPlayerError error = kYTPlayerErrorUnknown;
+            JVPlayerError error = kJVPlayerErrorUnknown;
 
-            if ([data isEqual:kYTPlayerErrorInvalidParamErrorCode])
+            if ([data isEqual:kJVPlayerErrorInvalidParamErrorCode])
             {
-                error = kYTPlayerErrorInvalidParam;
+                error = kJVPlayerErrorInvalidParam;
             }
-            else if ([data isEqual:kYTPlayerErrorHTML5ErrorCode])
+            else if ([data isEqual:kJVPlayerErrorHTML5ErrorCode])
             {
-                error = kYTPlayerErrorHTML5Error;
+                error = kJVPlayerErrorHTML5Error;
             }
-            else if ([data isEqual:kYTPlayerErrorNotEmbeddableErrorCode])
+            else if ([data isEqual:kJVPlayerErrorNotEmbeddableErrorCode])
             {
-                error = kYTPlayerErrorNotEmbeddable;
+                error = kJVPlayerErrorNotEmbeddable;
             }
-            else if ([data isEqual:kYTPlayerErrorVideoNotFoundErrorCode] || [data isEqual:kYTPlayerErrorCannotFindVideoErrorCode])
+            else if ([data isEqual:kJVPlayerErrorVideoNotFoundErrorCode] || [data isEqual:kJVPlayerErrorCannotFindVideoErrorCode])
             {
-                error = kYTPlayerErrorVideoNotFound;
+                error = kJVPlayerErrorVideoNotFound;
             }
 
             [self.delegate playerView:self receivedError:error];
@@ -820,7 +776,7 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
     // UIWebView is the URL for the embed, which is of the format:
     //     http(s)://www.youtube.com/embed/[VIDEO ID]?[PARAMETERS]
     NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:kYTPlayerEmbedUrlRegexPattern
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:kJVPlayerEmbedUrlRegexPattern
                                                                            options:NSRegularExpressionCaseInsensitive
                                                                              error:&error];
     
@@ -851,7 +807,9 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 {
     // creating webview for youtube player
     if(!_webView || !_webView.window)
+    {
         [self addSubview:self.webView];
+    }
     
     // preserving users frame
     _prevFrame = self.frame;
@@ -876,9 +834,9 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
     }
 
     NSError *error = nil;
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"YTPlayerView-iframe-player"
-                                                     ofType:@"html"
-                                                inDirectory:@""];
+    NSString *path = [[NSBundle mainBundle] pathForResource:JVYoutubePlayeriFrameFileName
+                                                     ofType:JVYoutubePlayeriFrameFileType
+                                                inDirectory:JVYoutubePlayeriFrameDirectory];
 
     NSString *embedHTMLTemplate = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
 
@@ -922,14 +880,14 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
  *                     video IDs to play with the playlist player.
  * @param index 0-index position of video to start playback on.
  * @param startSeconds Seconds after start of video to begin playback.
- * @param suggestedQuality Suggested YTPlaybackQuality to play the videos.
+ * @param suggestedQuality Suggested JVPlaybackQuality to play the videos.
  * @return The result of cueing the playlist.
  */
-- (void)cuePlaylist:(NSString *)cueingString index:(int)index startSeconds:(float)startSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)cuePlaylist:(NSString *)cueingString index:(int)index startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
 {
     NSNumber *indexValue = [NSNumber numberWithInt:index];
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
+    NSString *qualityValue = [JVYoutubePlayerView stringForPlaybackQuality:suggestedQuality];
     NSString *command = [NSString stringWithFormat:@"player.cuePlaylist(%@, %@, %@, '%@');", cueingString, indexValue, startSecondsValue, qualityValue];
     [self stringFromEvaluatingJavaScript:command];
 }
@@ -942,14 +900,14 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
  *                     video IDs to play with the playlist player.
  * @param index 0-index position of video to start playback on.
  * @param startSeconds Seconds after start of video to begin playback.
- * @param suggestedQuality Suggested YTPlaybackQuality to play the videos.
+ * @param suggestedQuality Suggested JVPlaybackQuality to play the videos.
  * @return The result of cueing the playlist.
  */
-- (void)loadPlaylist:(NSString *)cueingString index:(int)index startSeconds:(float)startSeconds suggestedQuality:(YTPlaybackQuality)suggestedQuality
+- (void)loadPlaylist:(NSString *)cueingString index:(int)index startSeconds:(float)startSeconds suggestedQuality:(JVPlaybackQuality)suggestedQuality
 {    
     NSNumber *indexValue = [NSNumber numberWithInt:index];
     NSNumber *startSecondsValue = [NSNumber numberWithFloat:startSeconds];
-    NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
+    NSString *qualityValue = [JVYoutubePlayerView stringForPlaybackQuality:suggestedQuality];
     NSString *command = [NSString stringWithFormat:@"player.loadPlaylist(%@, %@, %@, '%@');", cueingString, indexValue, startSecondsValue, qualityValue];
     [self stringFromEvaluatingJavaScript:command];
 }
@@ -1013,7 +971,7 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 
 - (void)webViewDidFinishLoad:(UIWebView*)webView
 {
-    [self setPlaybackQuality:kYTPlaybackQualityHD720];
+    [self setPlaybackQuality:kJVPlaybackQualityHD720];
 
     if(self.allowLandscapeMode)
     {
@@ -1085,8 +1043,8 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
  * Updates player frame depending on orientation
  * @name orientationChanged
  *
- * @param screenHeight, screenWidth and ytPlayer
- * @return void but updates ytPlayer frame
+ * @param screenHeight, screenWidth and JVPlayer
+ * @return void but updates JVPlayer frame
  */
 - (void)orientationChanged:(NSNotification*)notification
 {
@@ -1161,7 +1119,7 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
     {
         if([self.loadPlayerDic[0] isEqualToString:@"loadPlayerWithVideosId"])
         {
-            [self loadPlaylist:[self stringFromVideoIdArray:self.loadPlayerDic[1]] index:0 startSeconds:0.0 suggestedQuality:kYTPlaybackQualityHD720];
+            [self loadPlaylist:[self stringFromVideoIdArray:self.loadPlayerDic[1]] index:0 startSeconds:0.0 suggestedQuality:kJVPlaybackQualityHD720];
         }
     }
     
