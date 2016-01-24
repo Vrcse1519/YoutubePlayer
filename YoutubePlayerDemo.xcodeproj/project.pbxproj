@@ -246,7 +246,7 @@
 		3CCFC41719FB1565000838B6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = com.jorgedeveloper;
 				TargetAttributes = {
 					3CCFC41E19FB1565000838B6 = {
@@ -380,6 +380,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -448,6 +449,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "YoutubePlayerDemo/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jorgedeveloper.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = YoutubePlayerDemo;
 				PROVISIONING_PROFILE = "";
 			};
@@ -461,6 +463,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "YoutubePlayerDemo/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jorgedeveloper.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = YoutubePlayerDemo;
 				PROVISIONING_PROFILE = "";
 			};
@@ -480,6 +483,7 @@
 				);
 				INFOPLIST_FILE = YoutubePlayerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jorgedeveloper.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = YoutubePlayerDemoTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YoutubePlayerDemo.app/YoutubePlayerDemo";
 			};
@@ -495,6 +499,7 @@
 				);
 				INFOPLIST_FILE = YoutubePlayerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jorgedeveloper.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = YoutubePlayerDemoTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YoutubePlayerDemo.app/YoutubePlayerDemo";
 			};
