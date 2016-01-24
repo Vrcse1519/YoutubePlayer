@@ -14,6 +14,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 @class YTPlayerView;
 
 /** These enums represent the state of the current video in the player. */
@@ -100,7 +101,7 @@ typedef enum {
  * YTPlayerView::loadWithPlaylistId: or their variants to set the video or playlist
  * to populate the view with.
  */
-@interface YTPlayerView : UIView<NSObject,UIWebViewDelegate>
+@interface YTPlayerView : UIView<NSObject, UIWebViewDelegate>
 
 // for more information visit https://developers.google.com/youtube/player_parameters
 @property (nonatomic) BOOL allowLandscapeMode;
@@ -164,6 +165,8 @@ typedef enum {
 @property (nonatomic) BOOL hd720;
 
 @property (nonatomic) BOOL hd1080;
+
+@property  (nonatomic) BOOL allowBackgroundPlayback;
 
 @property(nonatomic, strong) UIWebView *webView;
 

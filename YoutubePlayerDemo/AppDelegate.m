@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <AVFoundation/AVFoundation.h>
+#import <MediaPlayer/MediaPlayer.h>
 
 
 @interface AppDelegate ()
@@ -20,17 +21,24 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 
-    NSError *setCategoryError = nil;
-    [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error: &setCategoryError];
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setActive:YES error:nil];
     
-//    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-//    BOOL ok;
-//    NSError *setCategoryError = nil;
-//    ok = [audioSession setCategory:AVAudioSessionCategoryPlayback
-//                             error:&setCategoryError];
-//    if (!ok) {
-//        NSLog(@"%s setCategoryError=%@", __PRETTY_FUNCTION__, setCategoryError);
-//    }
+    NSError *sessionError = nil;
+    
+    BOOL success = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&sessionError];
+    
+    if (!success)
+    {
+        NSLog(@"setCategory error %@", sessionError);
+    }
+    
+    success = [audioSession setActive:YES error:&sessionError];
+    
+    if (!success)
+    {
+        NSLog(@"setActive error %@", sessionError);
+    }
     
     return YES;
 }
@@ -42,7 +50,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {

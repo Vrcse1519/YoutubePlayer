@@ -526,7 +526,14 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     // logging state of video
-//    NSLog(@"***** Checking Loading -> %@", request.URL.absoluteString);
+    NSLog(@"***** Checking Loading -> %@", request.URL.absoluteString);
+    
+    if (self.allowBackgroundPlayback && [request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=2"])
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self playVideo]; // play video if goes into background
+        });
+    }
     
     // adding timer to pause video at giving time
     if ([request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=1"])
@@ -540,11 +547,6 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
     {
         if(self.autoplay)
             [self playVideo];
-    }
-    
-    if ([request.URL.absoluteString isEqualToString:@"ytplayer://onStateChange?data=1"])
-    {
-//        [self playVideo]; // play video if goes into background
     }
     
     // if found an error skip to next video
@@ -579,6 +581,7 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
     
     return YES;
 }
+
 
 /**
  * Convert a quality value from NSString to the typed enum value.

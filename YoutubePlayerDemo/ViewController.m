@@ -63,26 +63,6 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
     // adding controls menu to view
     [self.view addSubview:self.sphereMenu];
     
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession setActive:YES error:nil];
-    
-    NSError *sessionError = nil;
-    
-    BOOL success = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&sessionError];
-    
-    if (!success)
-    {
-        NSLog(@"setCategory error %@", sessionError);
-    }
-    
-    success = [audioSession setActive:YES error:&sessionError];
-    
-    if (!success)
-    {
-        NSLog(@"setActive error %@", sessionError);
-    }
-    
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appIsInBakcground:)
                                                  name:UIApplicationDidEnterBackgroundNotification
@@ -183,6 +163,7 @@ static NSString const *api_key =@"AIzaSyAnNzksYIn-iEWWIvy8slUZM44jH6WjtP8"; // p
         _player.playsinline = NO;
         _player.fullscreen = YES;
         _player.playsinline = YES;
+        _player.allowBackgroundPlayback = YES;
     }
     
     return _player;
