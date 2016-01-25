@@ -10,7 +10,7 @@
 		3C3B24591C55722400612E8D /* JVYoutubePlayerView-iFrame.html in Resources */ = {isa = PBXBuildFile; fileRef = 3C3B24581C55722400612E8D /* JVYoutubePlayerView-iFrame.html */; };
 		3C3B245B1C55724000612E8D /* JVYoutubePlayerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3B245A1C55724000612E8D /* JVYoutubePlayerConstants.m */; };
 		3C3B24611C5573A700612E8D /* JVYoutubePlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3B245F1C5573A700612E8D /* JVYoutubePlayerView.m */; };
-		3C3B24641C5573C800612E8D /* JVPlayerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3B24631C5573C800612E8D /* JVPlayerConstants.m */; };
+		3C3B24731C55980200612E8D /* JVPlayerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3B24711C55980200612E8D /* JVPlayerConstants.m */; };
 		3CCC183A1A414E0B00AFC7BF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCC182C1A414E0B00AFC7BF /* AppDelegate.m */; };
 		3CCC183D1A414E0B00AFC7BF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CCC18311A414E0B00AFC7BF /* Images.xcassets */; };
 		3CCC183E1A414E0B00AFC7BF /* SphereMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCC18341A414E0B00AFC7BF /* SphereMenu.m */; };
@@ -42,9 +42,9 @@
 		3C3B245C1C55724A00612E8D /* JVYoutubePlayerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVYoutubePlayerConstants.h; sourceTree = "<group>"; };
 		3C3B245E1C5573A700612E8D /* JVYoutubePlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVYoutubePlayerView.h; sourceTree = "<group>"; };
 		3C3B245F1C5573A700612E8D /* JVYoutubePlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVYoutubePlayerView.m; sourceTree = "<group>"; };
-		3C3B24621C5573BB00612E8D /* JVPlayerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVPlayerConstants.h; sourceTree = "<group>"; };
-		3C3B24631C5573C800612E8D /* JVPlayerConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVPlayerConstants.m; sourceTree = "<group>"; };
 		3C3B24681C5578DD00612E8D /* JVPlayerEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVPlayerEnums.h; sourceTree = "<group>"; };
+		3C3B24701C55980200612E8D /* JVPlayerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVPlayerConstants.h; sourceTree = "<group>"; };
+		3C3B24711C55980200612E8D /* JVPlayerConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVPlayerConstants.m; sourceTree = "<group>"; };
 		3CCC182B1A414E0B00AFC7BF /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3CCC182C1A414E0B00AFC7BF /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		3CCC182E1A414E0B00AFC7BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -130,21 +130,13 @@
 		3C3B245D1C5573A700612E8D /* Player */ = {
 			isa = PBXGroup;
 			children = (
+				3C3B246C1C55980200612E8D /* Categories */,
+				3C3B246F1C55980200612E8D /* Constants */,
 				3C3B245E1C5573A700612E8D /* JVYoutubePlayerView.h */,
 				3C3B245F1C5573A700612E8D /* JVYoutubePlayerView.m */,
-				3C3B24601C5573A700612E8D /* Player Constants */,
 				3C3B24671C5578CD00612E8D /* Enums */,
 			);
 			path = Player;
-			sourceTree = "<group>";
-		};
-		3C3B24601C5573A700612E8D /* Player Constants */ = {
-			isa = PBXGroup;
-			children = (
-				3C3B24621C5573BB00612E8D /* JVPlayerConstants.h */,
-				3C3B24631C5573C800612E8D /* JVPlayerConstants.m */,
-			);
-			path = "Player Constants";
 			sourceTree = "<group>";
 		};
 		3C3B24671C5578CD00612E8D /* Enums */ = {
@@ -153,6 +145,22 @@
 				3C3B24681C5578DD00612E8D /* JVPlayerEnums.h */,
 			);
 			path = Enums;
+			sourceTree = "<group>";
+		};
+		3C3B246C1C55980200612E8D /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		3C3B246F1C55980200612E8D /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				3C3B24701C55980200612E8D /* JVPlayerConstants.h */,
+				3C3B24711C55980200612E8D /* JVPlayerConstants.m */,
+			);
+			path = Constants;
 			sourceTree = "<group>";
 		};
 		3C7B43F31A00680500A92BAF /* YoutubePlayer */ = {
@@ -377,7 +385,7 @@
 				A8EC7C6E1A43917D00E48DF6 /* ChameleonStatusBar.m in Sources */,
 				3C3B245B1C55724000612E8D /* JVYoutubePlayerConstants.m in Sources */,
 				A8EC7C721A43917D00E48DF6 /* UIViewController+Chameleon.m in Sources */,
-				3C3B24641C5573C800612E8D /* JVPlayerConstants.m in Sources */,
+				3C3B24731C55980200612E8D /* JVPlayerConstants.m in Sources */,
 				3CCC18401A414E0B00AFC7BF /* main.m in Sources */,
 				3CCC18411A414E0B00AFC7BF /* ViewController.m in Sources */,
 				A8EC7C6F1A43917D00E48DF6 /* NSArray+Chameleon.m in Sources */,

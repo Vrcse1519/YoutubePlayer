@@ -12,19 +12,28 @@
 
 
 #pragma mark - Player Interface
+
 @interface JVYoutubePlayerView()
+
+@property(nonatomic, strong) UIWebView *webView;
 
 // for screen sizes
 @property (nonatomic) CGSize screenRect;
+
 @property (nonatomic) CGFloat screenWidth;
+
 @property (nonatomic) CGFloat screenHeight;
 
 @property (nonatomic) CGRect prevFrame;
+
 @property (nonatomic) BOOL playerContainsCustomParams;
+
 @property (nonatomic) BOOL playerWithTimer;
+
 @property (nonatomic) CGFloat stopTimer;
 
 @property (nonatomic, strong) NSArray *loadPlayerDic;
+
 @property (nonatomic, assign) BOOL isPlayerLoaded;
 
 @property (nonatomic, strong) NSMutableDictionary *dicParameters;
@@ -36,33 +45,6 @@
 #pragma mark - Player Implementation
 @implementation JVYoutubePlayerView
 
-@synthesize allowLandscapeMode = _allowLandscapeMode;
-@synthesize forceBackToPortraitMode = _forceBackToPortraitMode;
-@synthesize allowAutoResizingPlayerFrame = _allowAutoResizingPlayerFrame;
-@synthesize autohide = _autohide;
-@synthesize autoplay = _autoplay;
-@synthesize cc_load_policy = _cc_load_policy;
-@synthesize color = _color;
-@synthesize controls = _controls;
-@synthesize disablekb = _disablekb;
-@synthesize enablejsapi = _enablejsapi;
-@synthesize end = _end;
-@synthesize fullscreen = _fullscreen;
-@synthesize iv_load_policy = _iv_load_policy;
-@synthesize list = _list;
-@synthesize listType = _listType;
-@synthesize loops = _loops;
-@synthesize modestbranding = _modestbranding;
-@synthesize playerapiid = _playerapiid;
-@synthesize playList = _playList;
-@synthesize playsinline = _playsinline;
-@synthesize rel = _rel;
-@synthesize showinfo = _showinfo;
-@synthesize start = _start;
-@synthesize theme = _theme;
-@synthesize hd = _hd;
-@synthesize hd720 = _hd720;
-@synthesize hd1080 = _hd1080;
 
 #pragma mark - Player Initializers
 
@@ -1151,7 +1133,7 @@
 
 - (UIWebView *)webView
 {
-    if(!_webView)
+    if (!_webView)
     {
         _webView = [[UIWebView alloc] initWithFrame:self.bounds];
         _webView.delegate = self;
@@ -1165,9 +1147,9 @@
     return _webView;
 }
 
-- (NSMutableDictionary*)dicParameters
+- (NSMutableDictionary *)dicParameters
 {
-    if(!_dicParameters)
+    if (!_dicParameters)
     {
         _dicParameters = [[NSMutableDictionary alloc] init];
     }
@@ -1175,7 +1157,6 @@
     return _dicParameters;
 }
 
-#pragma mark - Customs Setters and Getters
 
 // Custom setters and getters for youtube player parameters
 // to be loaded when player loads video.
@@ -1185,9 +1166,9 @@
 
 - (void)setIsPlayerLoaded:(BOOL)isPlayerLoaded
 {
-    if(self.loadPlayerDic.count > 0)
+    if (self.loadPlayerDic.count)
     {
-        if([self.loadPlayerDic[0] isEqualToString:@"loadPlayerWithVideosId"])
+        if ([self.loadPlayerDic[0] isEqualToString:@"loadPlayerWithVideosId"])
         {
             [self loadPlaylist:[self stringFromVideoIdArray:self.loadPlayerDic[1]] index:0 startSeconds:0.0 suggestedQuality:kJVPlaybackQualityHD720];
         }
@@ -1196,29 +1177,11 @@
     _isPlayerLoaded = isPlayerLoaded;
 }
 
--(BOOL)allowLandscapeMode {
-    return _allowLandscapeMode;
-}
 
--(void)setAllowLandscapeMode:(BOOL)allowLandscapeMode {
-    _allowLandscapeMode = allowLandscapeMode;
-}
-
--(BOOL)forceBackToPortraitMode {
-    return _forceBackToPortraitMode;
-}
-
--(void)setForceBackToPortraitMode:(BOOL)forceBackToPortraitMode {
-    _forceBackToPortraitMode = forceBackToPortraitMode;
-}
-
--(BOOL)allowAutoResizingPlayerFrame {
-    return _allowAutoResizingPlayerFrame;
-}
-
--(void)setAllowAutoResizingPlayerFrame:(BOOL)allowAutoResizingPlayerFrame {
-    
-    if(allowAutoResizingPlayerFrame == YES) {
+- (void)setAllowAutoResizingPlayerFrame:(BOOL)allowAutoResizingPlayerFrame
+{
+    if (allowAutoResizingPlayerFrame)
+    {
         // current device
         UIDevice *device = [UIDevice currentDevice];
         
@@ -1227,294 +1190,303 @@
         //Get the notification centre for the app
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:device];
     }
+    
     _allowAutoResizingPlayerFrame = allowAutoResizingPlayerFrame;
 }
 
--(BOOL)autohide {
-    return _autohide;
-}
 
--(void)setAutohide:(BOOL)autohide {
+//@synthesize autohide = _autohide;
+//@synthesize autoplay = _autoplay;
+//@synthesize cc_load_policy = _cc_load_policy;
+//@synthesize color = _color;
+//@synthesize controls = _controls;
+//@synthesize disablekb = _disablekb;
+//@synthesize enablejsapi = _enablejsapi;
+//@synthesize end = _end;
+//@synthesize fullscreen = _fullscreen;
+//@synthesize iv_load_policy = _iv_load_policy;
+//@synthesize list = _list;
+//@synthesize listType = _listType;
+//@synthesize loops = _loops;
+//@synthesize modestbranding = _modestbranding;
+//@synthesize playerapiid = _playerapiid;
+//@synthesize playList = _playList;
+//@synthesize playsinline = _playsinline;
+//@synthesize rel = _rel;
+//@synthesize showinfo = _showinfo;
+//@synthesize start = _start;
+//@synthesize theme = _theme;
+//@synthesize hd = _hd;
+//@synthesize hd720 = _hd720;
+//@synthesize hd1080 = _hd1080;
 
-    if(autohide == YES) {
+
+#pragma mark - Customs Setters and Getters
+
+- (void)setAutohide:(BOOL)autohide
+{
+    if (autohide)
+    {
         [self.dicParameters setObject:@(1) forKey:@"autohide"];
     }
+    
     _autohide = autohide;
 }
 
--(BOOL)autoplay {
-    return _autoplay;
-}
 
--(void)setAutoplay:(BOOL)autoplay {
-    
-    if(autoplay == YES) {
+- (void)setAutoplay:(BOOL)autoplay
+{
+    if(autoplay)
+    {
         [self.dicParameters setObject:@(1) forKey:@"autoplay"];
     }
+    
     _autoplay = autoplay;
 }
 
--(BOOL)cc_load_policy {
-    return _cc_load_policy;
-}
 
--(void)setCc_load_policy:(BOOL)cc_load_policy {
-    
-    if(cc_load_policy == YES) {
+- (void)setCc_load_policy:(BOOL)cc_load_policy
+{
+    if (cc_load_policy)
+    {
         [self.dicParameters setObject:@(1) forKey:@"cc_load_policy"];
     }
+    
     _cc_load_policy = cc_load_policy;
 }
 
--(BOOL)color {
-    return _color;
-}
 
--(void)setColor:(BOOL)color {
-    
-    if(color == YES) {
+- (void)setColor:(BOOL)color
+{
+    if (color)
+    {
         [self.dicParameters setObject:@"white" forKey:@"color"];
     }
+    
     _color = color;
 }
 
--(BOOL)controls {
-    return _controls;
-}
 
--(void)setControls:(BOOL)controls {
-    
-    if(controls == YES) {
+- (void)setControls:(BOOL)controls
+{
+    if (controls)
+    {
         [self.dicParameters setObject:@(0) forKey:@"controls"];
     }
+    
     _controls = controls;
 }
 
--(BOOL)disablekb {
-    return _disablekb;
-}
 
--(void)setDisablekb:(BOOL)disablekb {
-    
-    if(disablekb == YES) {
+- (void)setDisablekb:(BOOL)disablekb
+{
+    if (disablekb)
+    {
         [self.dicParameters setObject:@(1) forKey:@"disablekb"];
     }
+    
     _disablekb = disablekb;
 }
 
--(BOOL)enablejsapi {
-    return _enablejsapi;
-}
 
--(void)setEnablejsapi:(BOOL)enablejsapi {
-    
-    if(enablejsapi == YES) {
+- (void)setEnablejsapi:(BOOL)enablejsapi
+{
+    if (enablejsapi)
+    {
         [self.dicParameters setObject:@(1) forKey:@"enablejsapi"];
     }
+    
     _enablejsapi = enablejsapi;
 }
 
--(int)end {
-    return _end;
-}
 
--(void)setEnd:(int)end {
-    
-    if(end > 0) {
+- (void)setEnd:(NSInteger)end
+{
+    if (end)
+    {
         [self.dicParameters setObject:@(end) forKey:@"end"];
     }
+    
     _end = end;
 }
 
--(BOOL)fullscreen {
-    return _fullscreen;
-}
 
--(void)setFullscreen:(BOOL)fullscreen {
-    
-    if(fullscreen == YES) {
+- (void)setFullscreen:(BOOL)fullscreen
+{
+    if (fullscreen)
+    {
         [self.dicParameters setObject:@(0) forKey:@"fs"];
     }
+    
     _fullscreen = fullscreen;
 }
 
--(BOOL)iv_load_policy {
-    return _iv_load_policy;
-}
 
--(void)setIv_load_policy:(BOOL)iv_load_policy {
-    
-    if(iv_load_policy == YES) {
+- (void)setIv_load_policy:(BOOL)iv_load_policy
+{
+    if (iv_load_policy)
+    {
         [self.dicParameters setObject:@(3) forKey:@"iv_load_policy"];
     }
+    
     _iv_load_policy = iv_load_policy;
 }
 
--(NSString*)list {
-    return _list;
-}
 
--(void)setList:(NSString *)list {
-    
-    if(list.length > 0) {
+- (void)setList:(NSString *)list
+{
+    if (list.length > 0)
+    {
         [self.dicParameters setObject:list forKey:@"list"];
     }
+    
     _list = list;
 }
 
--(NSString*)listType {
-    return _listType;
-}
 
--(void)setListType:(NSString *)listType {
-    
-    if(listType.length > 0) {
+- (void)setListType:(NSString *)listType
+{
+    if (listType.length > 0)
+    {
         [self.dicParameters setObject:listType forKey:@"listType"];
     }
+    
     _listType = listType;
 }
 
--(BOOL)loops {
-    return _loops;
-}
 
--(void)setLoops:(BOOL)loops {
-    
-    if(loops == YES) {
+- (void)setLoops:(BOOL)loops
+{
+    if (loops)
+    {
         [self.dicParameters setObject:@(1) forKey:@"loop"];
     }
+    
     _loops = loops;
 }
 
--(BOOL)modestbranding {
-    return _modestbranding;
-}
 
--(void)setModestbranding:(BOOL)modestbranding {
-    
-    if(modestbranding == YES) {
-        [_dicParameters setObject:[NSNumber numberWithInt:1] forKey:@"modestbranding"];
+- (void)setModestbranding:(BOOL)modestbranding
+{
+    if (modestbranding)
+    {
+        [self.dicParameters setObject:[NSNumber numberWithInt:1] forKey:@"modestbranding"];
     }
+    
     _modestbranding = modestbranding;
 }
 
--(NSString*)playerapiid {
-    return _playerapiid;
-}
 
--(void)setPlayerapiid:(NSString *)playerapiid {
-    
-    if(playerapiid.length > 0) {
+- (void)setPlayerapiid:(NSString *)playerapiid
+{
+    if (playerapiid.length)
+    {
         [self.dicParameters setObject:playerapiid forKey:@"playerapiid"];
     }
+    
     _playerapiid = playerapiid;
 }
 
--(NSString*)playList {
-    return _playList;
-}
 
--(void)setPlayList:(NSString*)playList {
-    
-    if(playList.length > 0) {
+- (void)setPlayList:(NSString *)playList
+{
+    if (playList.length)
+    {
         [self.dicParameters setObject:playList forKey:@"playlist"];
     }
+    
     _playList = playList;
 }
 
--(BOOL)playsinline {
-    return _playsinline;
-}
 
--(void)setPlaysinline:(BOOL)playsinline {
-    
-    if(playsinline == YES) {
+- (void)setPlaysinline:(BOOL)playsinline
+{
+    if (playsinline)
+    {
         [self.dicParameters setObject:@(1) forKey:@"playsinline"];
     }
+    
     _playsinline = playsinline;
 }
 
--(BOOL)rel {
-    return _rel;
-}
 
--(void)setRel:(BOOL)rel {
-    
-    if(rel == YES) {
+- (void)setRel:(BOOL)rel
+{
+    if (rel)
+    {
         [self.dicParameters setObject:@(1) forKey:@"rel"];
     }
+    
     _rel = rel;
 }
 
--(BOOL)showinfo {
-    return _showinfo;
-}
 
--(void)setShowinfo:(BOOL)showinfo {
-    
-    if(showinfo == YES) {
+- (void)setShowinfo:(BOOL)showinfo
+{
+    if (showinfo)
+    {
         [self.dicParameters setObject:@(1) forKey:@"showinfo"];
     }
-    else{
+    else
+    {
         [self.dicParameters setObject:@(0) forKey:@"showinfo"];
     }
+    
     _showinfo = showinfo;
 }
 
--(int)start {
-    return _start;
-}
 
--(void)setStart:(int)start {
-    
-    if(start == YES) {
+- (void)setStart:(NSInteger)start
+{
+    if (start)
+    {
         [self.dicParameters setObject:@(start) forKey:@"start"];
     }
+    
     _start = start;
 }
 
--(BOOL)theme {
-    return _theme;
-}
 
--(void)setTheme:(BOOL)theme {
-    
-    if(theme == YES) {
+- (void)setTheme:(BOOL)theme
+{
+    if (theme)
+    {
         [self.dicParameters setObject:@"light" forKey:@"theme"];
     }
+    
     _theme = theme;
 }
 
--(BOOL)hd {
-    return _hd;
-}
 
--(void)setHd:(BOOL)hd {
-    if(hd == YES) {
+- (void)setHd:(BOOL)hd
+{
+    if(hd)
+    {
         [self.dicParameters setObject:@(1) forKey:@"hd"];
     }
+    
     _hd = hd;
 }
 
--(BOOL)hd720 {
-    return _hd720;
-}
 
--(void)setHd720:(BOOL)hd720 {
-    if(hd720 == YES) {
+- (void)setHd720:(BOOL)hd720
+{
+    if (hd720)
+    {
         [self.dicParameters setObject:@"hd720" forKey:@"vq"];
     }
+    
     _hd720 = hd720;
 }
 
--(BOOL)hd1080 {
-    return _hd1080;
-}
 
--(void)setHd1080:(BOOL)hd1080 {
-    if(hd1080 == YES) {
+- (void)setHd1080:(BOOL)hd1080
+{
+    if (hd1080)
+    {
         [self.dicParameters setObject:@"hd1080" forKey:@"vq"];
     }
+    
     _hd1080 = hd1080;
 }
 
