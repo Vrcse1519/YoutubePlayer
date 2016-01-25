@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "JVYoutubePlayerView.h"
+#import "JVYoutubePlayer.h"
+
 
 @interface ViewController : UIViewController <JVYoutubePlayerDelegate>
 

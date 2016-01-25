@@ -6,6 +6,7 @@
 //  Copyright © 2016 com.jorgedeveloper. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "JVPlayerConstants.h"
 
@@ -16,8 +17,7 @@
 #pragma mark - Player Protocol
 
 /**
- A delegate for ViewControllers to respond to YouTube player events outside of the view, such as changes to video playback state or playback errors.
- The callback functions correlate to the events fired by the JavaScript API. For the full documentation, see the JavaScript documentation here: https://developers.google.com/youtube/js_api_reference#Events
+ A delegate for ViewControllers to respond to YouTube player events outside of the view, such as changes to video playback state or playback errors. The callback functions correlate to the events fired by the JavaScript API. For the full documentation, see the JavaScript documentation here: https://developers.google.com/youtube/js_api_reference#Events
  */
 @protocol JVYoutubePlayerDelegate<NSObject>
 
@@ -253,6 +253,24 @@
 @property(nonatomic, weak) id<JVYoutubePlayerDelegate> delegate;
 
 
+/**
+ The webview use to load youtube player.
+ */
+@property(nonatomic, strong, readonly) UIWebView *webView;
+
+
+/**
+ Internal player with timer.
+ */
+@property (nonatomic, assign) BOOL playerWithTimer;
+
+
+/**
+ Internal stop timer.
+ */
+@property (nonatomic, assign) CGFloat stopTimer;
+
+
 #pragma mark - Player Initializers
 
 /**
@@ -368,274 +386,6 @@
 - (BOOL)loadWithPlaylistId:(NSString *)playlistId playerVars:(NSDictionary *)playerVars;
 
 
-#pragma mark - Player controls
-
-// These methods correspond to their JavaScript equivalents as documented here:
-//   https://developers.google.com/youtube/js_api_reference#Playback_controls
-
-/**
- Starts or resumes playback on the loaded video. Corresponds to this method from the JavaScript API: https://developers.google.com/youtube/iframe_api_reference#playVideo
- */
-- (void)playVideo;
-
-
-/**
- Pauses playback on a playing video. Corresponds to this method from the JavaScript API: https://developers.google.com/youtube/iframe_api_reference#pauseVideo
- */
-- (void)pauseVideo;
-
-
-/**
- Stops playback on a playing video. Corresponds to this method from the JavaScript API: https://developers.google.com/youtube/iframe_api_reference#stopVideo
- */
-- (void)stopVideo;
-
-
-/**
- Seek to a given time on a playing video. Corresponds to this method from the JavaScript API: https://developers.google.com/youtube/iframe_api_reference#seekTo
- 
- @param seekToSeconds 
-    The time in seconds to seek to in the loaded video.
- @param allowSeekAhead 
-    Whether to make a new request to the server if the time is outside what is currently buffered. Recommended to set to YES.
- */
-- (void)seekToSeconds:(float)seekToSeconds allowSeekAhead:(BOOL)allowSeekAhead;
-
-
-/**
- Clears the loaded video from the player. Corresponds to this method from the JavaScript API: https://developers.google.com/youtube/iframe_api_reference#clearVideo
- */
-- (void)clearVideo;
-
-
-#pragma mark - Queuing videos
-
-// Queueing functions for videos. These methods correspond to their JavaScript
-// equivalents as documented here:
-//   https://developers.google.com/youtube/js_api_reference#Queueing_Functions
-
-/**
- * Cues a given video by its video ID for playback starting at the given time and with the
- * suggested quality. Cueing loads a video, but does not start video playback. This method
- * corresponds with its JavaScript API equivalent as documented here:
- *    https://developers.google.com/youtube/iframe_api_reference#cueVideoById
- *
- * @param videoId A video ID to cue.
- * @param startSeconds Time in seconds to start the video when JVYoutubePlayerView::playVideo is called.
- * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
- */
-- (void)cueVideoById:(NSString *)videoId
-        startSeconds:(float)startSeconds
-    suggestedQuality:(JVPlaybackQuality)suggestedQuality;
-
-/**
- * Cues a given video by its video ID for playback starting and ending at the given times
- * with the suggested quality. Cueing loads a video, but does not start video playback. This
- * method corresponds with its JavaScript API equivalent as documented here:
- *    https://developers.google.com/youtube/iframe_api_reference#cueVideoById
- *
- * @param videoId A video ID to cue.
- * @param startSeconds Time in seconds to start the video when playVideo() is called.
- * @param endSeconds Time in seconds to end the video after it begins playing.
- * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
- */
-- (void)cueVideoById:(NSString *)videoId
-        startSeconds:(float)startSeconds
-          endSeconds:(float)endSeconds
-    suggestedQuality:(JVPlaybackQuality)suggestedQuality;
-
-/**
- * Loads a given video by its video ID for playback starting at the given time and with the
- * suggested quality. Loading a video both loads it and begins playback. This method
- * corresponds with its JavaScript API equivalent as documented here:
- *    https://developers.google.com/youtube/iframe_api_reference#loadVideoById
- *
- * @param videoId A video ID to load and begin playing.
- * @param startSeconds Time in seconds to start the video when it has loaded.
- * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
- */
-- (void)loadVideoById:(NSString *)videoId
-         startSeconds:(float)startSeconds
-     suggestedQuality:(JVPlaybackQuality)suggestedQuality;
-
-/**
- * Loads a given video by its video ID for playback starting and ending at the given times
- * with the suggested quality. Loading a video both loads it and begins playback. This method
- * corresponds with its JavaScript API equivalent as documented here:
- *    https://developers.google.com/youtube/iframe_api_reference#loadVideoById
- *
- * @param videoId A video ID to load and begin playing.
- * @param startSeconds Time in seconds to start the video when it has loaded.
- * @param endSeconds Time in seconds to end the video after it begins playing.
- * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
- */
-- (void)loadVideoById:(NSString *)videoId
-         startSeconds:(CGFloat)startSeconds
-           endSeconds:(CGFloat)endSeconds
-     suggestedQuality:(JVPlaybackQuality)suggestedQuality;
-
-/**
- * Cues a given video by its URL on YouTube.com for playback starting at the given time
- * and with the suggested quality. Cueing loads a video, but does not start video playback.
- * This method corresponds with its JavaScript API equivalent as documented here:
- *    https://developers.google.com/youtube/iframe_api_reference#cueVideoByUrl
- *
- * @param videoURL URL of a YouTube video to cue for playback.
- * @param startSeconds Time in seconds to start the video when JVYoutubePlayerView::playVideo is called.
- * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
- */
-- (void)cueVideoByURL:(NSString *)videoURL
-         startSeconds:(float)startSeconds
-     suggestedQuality:(JVPlaybackQuality)suggestedQuality;
-
-/**
- * Cues a given video by its URL on YouTube.com for playback starting at the given time
- * and with the suggested quality. Cueing loads a video, but does not start video playback.
- * This method corresponds with its JavaScript API equivalent as documented here:
- *    https://developers.google.com/youtube/iframe_api_reference#cueVideoByUrl
- *
- * @param videoURL URL of a YouTube video to cue for playback.
- * @param startSeconds Time in seconds to start the video when JVYoutubePlayerView::playVideo is called.
- * @param endSeconds Time in seconds to end the video after it begins playing.
- * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
- */
-- (void)cueVideoByURL:(NSString *)videoURL
-         startSeconds:(float)startSeconds
-           endSeconds:(float)endSeconds
-     suggestedQuality:(JVPlaybackQuality)suggestedQuality;
-
-/**
- * Loads a given video by its video ID for playback starting at the given time
- * with the suggested quality. Loading a video both loads it and begins playback. This method
- * corresponds with its JavaScript API equivalent as documented here:
- *    https://developers.google.com/youtube/iframe_api_reference#loadVideoByUrl
- *
- * @param videoURL URL of a YouTube video to load and play.
- * @param startSeconds Time in seconds to start the video when it has loaded.
- * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
- */
-- (void)loadVideoByURL:(NSString *)videoURL
-          startSeconds:(float)startSeconds
-      suggestedQuality:(JVPlaybackQuality)suggestedQuality;
-
-/**
- * Loads a given video by its video ID for playback starting and ending at the given times
- * with the suggested quality. Loading a video both loads it and begins playback. This method
- * corresponds with its JavaScript API equivalent as documented here:
- *    https://developers.google.com/youtube/iframe_api_reference#loadVideoByUrl
- *
- * @param videoURL URL of a YouTube video to load and play.
- * @param startSeconds Time in seconds to start the video when it has loaded.
- * @param endSeconds Time in seconds to end the video after it begins playing.
- * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
- */
-- (void)loadVideoByURL:(NSString *)videoURL
-          startSeconds:(float)startSeconds
-            endSeconds:(float)endSeconds
-      suggestedQuality:(JVPlaybackQuality)suggestedQuality;
-
-#pragma mark - Queuing functions for playlists
-
-// Queueing functions for playlists. These methods correspond to
-// the JavaScript methods defined here:
-//    https://developers.google.com/youtube/js_api_reference#Playlist_Queueing_Functions
-
-/**
- * Cues a given playlist with the given ID. The |index| parameter specifies the 0-indexed
- * position of the first video to play, starting at the given time and with the
- * suggested quality. Cueing loads a playlist, but does not start video playback. This method
- * corresponds with its JavaScript API equivalent as documented here:
- *    https://developers.google.com/youtube/iframe_api_reference#cuePlaylist
- *
- * @param playlistId Playlist ID of a YouTube playlist to cue.
- * @param index A 0-indexed position specifying the first video to play.
- * @param startSeconds Time in seconds to start the video when JVYoutubePlayerView::playVideo is called.
- * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
- */
-- (void)cuePlaylistByPlaylistId:(NSString *)playlistId
-                          index:(int)index
-                   startSeconds:(float)startSeconds
-               suggestedQuality:(JVPlaybackQuality)suggestedQuality;
-
-/**
- * Cues a playlist of videos with the given video IDs. The |index| parameter specifies the
- * 0-indexed position of the first video to play, starting at the given time and with the
- * suggested quality. Cueing loads a playlist, but does not start video playback. This method
- * corresponds with its JavaScript API equivalent as documented here:
- *    https://developers.google.com/youtube/iframe_api_reference#cuePlaylist
- *
- * @param videoIds An NSArray of video IDs to compose the playlist of.
- * @param index A 0-indexed position specifying the first video to play.
- * @param startSeconds Time in seconds to start the video when JVYoutubePlayerView::playVideo is called.
- * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
- */
-- (void)cuePlaylistByVideos:(NSArray *)videoIds
-                      index:(int)index
-               startSeconds:(float)startSeconds
-           suggestedQuality:(JVPlaybackQuality)suggestedQuality;
-
-/**
- * Loads a given playlist with the given ID. The |index| parameter specifies the 0-indexed
- * position of the first video to play, starting at the given time and with the
- * suggested quality. Loading a playlist starts video playback. This method
- * corresponds with its JavaScript API equivalent as documented here:
- *    https://developers.google.com/youtube/iframe_api_reference#loadPlaylist
- *
- * @param playlistId Playlist ID of a YouTube playlist to cue.
- * @param index A 0-indexed position specifying the first video to play.
- * @param startSeconds Time in seconds to start the video when JVYoutubePlayerView::playVideo is called.
- * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
- */
-- (void)loadPlaylistByPlaylistId:(NSString *)playlistId
-                           index:(int)index
-                    startSeconds:(float)startSeconds
-                suggestedQuality:(JVPlaybackQuality)suggestedQuality;
-
-/**
- * Loads a playlist of videos with the given video IDs. The |index| parameter specifies the
- * 0-indexed position of the first video to play, starting at the given time and with the
- * suggested quality. Loading a playlist starts video playback. This method
- * corresponds with its JavaScript API equivalent as documented here:
- *    https://developers.google.com/youtube/iframe_api_reference#loadPlaylist
- *
- * @param videoIds An NSArray of video IDs to compose the playlist of.
- * @param index A 0-indexed position specifying the first video to play.
- * @param startSeconds Time in seconds to start the video when JVYoutubePlayerView::playVideo is called.
- * @param suggestedQuality JVPlaybackQuality value suggesting a playback quality.
- */
-- (void)loadPlaylistByVideos:(NSArray *)videoIds
-                       index:(int)index
-                startSeconds:(float)startSeconds
-            suggestedQuality:(JVPlaybackQuality)suggestedQuality;
-
-#pragma mark - Playing a video in a playlist
-
-// These methods correspond to the JavaScript API as defined under the
-// "Playing a video in a playlist" section here:
-//    https://developers.google.com/youtube/js_api_reference#Playback_status
-
-/**
- * Loads and plays the next video in the playlist. Corresponds to this method from
- * the JavaScript API:
- *   https://developers.google.com/youtube/iframe_api_reference#nextVideo
- */
-- (void)nextVideo;
-
-/**
- * Loads and plays the previous video in the playlist. Corresponds to this method from
- * the JavaScript API:
- *   https://developers.google.com/youtube/iframe_api_reference#previousVideo
- */
-- (void)previousVideo;
-
-/**
- * Loads and plays the video at the given 0-indexed position in the playlist.
- * Corresponds to this method from the JavaScript API:
- *   https://developers.google.com/youtube/iframe_api_reference#playVideoAt
- *
- * @param index The 0-indexed position of the video in the playlist to load and play.
- */
-- (void)playVideoAt:(int)index;
 
 #pragma mark - Setting the playback rate
 
@@ -695,72 +445,6 @@
  */
 - (void)setShuffle:(BOOL)shuffle;
 
-#pragma mark - Playback status
-// These methods correspond to the JavaScript methods defined here:
-//    https://developers.google.com/youtube/js_api_reference#Playback_status
-
-/**
- * Returns a number between 0 and 1 that specifies the percentage of the video
- * that the player shows as buffered. This method corresponds to the
- * JavaScript API defined here:
- *   https://developers.google.com/youtube/iframe_api_reference#getVideoLoadedFraction
- *
- * @return A float value between 0 and 1 representing the percentage of the video
- *         already loaded.
- */
-- (float)videoLoadedFraction;
-
-/**
- * Returns the state of the player. This method corresponds to the
- * JavaScript API defined here:
- *   https://developers.google.com/youtube/iframe_api_reference#getPlayerState
- *
- * @return |JVPlayerState| representing the state of the player.
- */
-- (JVPlayerState)playerState;
-
-/**
- * Returns the elapsed time in seconds since the video started playing. This
- * method corresponds to the JavaScript API defined here:
- *   https://developers.google.com/youtube/iframe_api_reference#getCurrentTime
- *
- * @return Time in seconds since the video started playing.
- */
-- (float)currentTime;
-
-#pragma mark - Playback quality
-
-// Playback quality. These methods correspond to the JavaScript
-// methods defined here:
-//   https://developers.google.com/youtube/js_api_reference#Playback_quality
-
-/**
- * Returns the playback quality. This method corresponds to the
- * JavaScript API defined here:
- *   https://developers.google.com/youtube/iframe_api_reference#getPlaybackQuality
- *
- * @return JVPlaybackQuality representing the current playback quality.
- */
-- (JVPlaybackQuality)playbackQuality;
-
-/**
- * Suggests playback quality for the video. It is recommended to leave this setting to
- * |default|. This method corresponds to the JavaScript API defined here:
- *   https://developers.google.com/youtube/iframe_api_reference#setPlaybackQuality
- *
- * @param quality JVPlaybackQuality value to suggest for the player.
- */
-- (void)setPlaybackQuality:(JVPlaybackQuality)suggestedQuality;
-
-/**
- * Gets a list of the valid playback quality values, useful in conjunction with
- * JVYoutubePlayerView::setPlaybackQuality. This method corresponds to the
- * JavaScript API defined here:
- *   https://developers.google.com/youtube/iframe_api_reference#getAvailableQualityLevels
- *
- * @return An NSArray containing available playback quality levels.
- */
-- (NSArray *)availableQualityLevels;
 
 #pragma mark - Retrieving video information
 
