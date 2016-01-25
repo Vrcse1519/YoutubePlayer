@@ -147,10 +147,10 @@
 		3C3B245D1C5573A700612E8D /* Player */ = {
 			isa = PBXGroup;
 			children = (
-				3C3B246C1C55980200612E8D /* Categories */,
-				3C3B246F1C55980200612E8D /* Constants */,
 				3C3B245E1C5573A700612E8D /* JVYoutubePlayerView.h */,
 				3C3B245F1C5573A700612E8D /* JVYoutubePlayerView.m */,
+				3C3B246C1C55980200612E8D /* Categories */,
+				3C3B246F1C55980200612E8D /* Constants */,
 				3C3B24671C5578CD00612E8D /* Enums */,
 			);
 			path = Player;

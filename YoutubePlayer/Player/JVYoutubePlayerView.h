@@ -390,58 +390,48 @@
 #pragma mark - Setting the playback rate
 
 /**
- * Gets the playback rate. The default value is 1.0, which represents a video
- * playing at normal speed. Other values may include 0.25 or 0.5 for slower
- * speeds, and 1.5 or 2.0 for faster speeds. This method corresponds to the
- * JavaScript API defined here:
- *   https://developers.google.com/youtube/iframe_api_reference#getPlaybackRate
- *
- * @return An integer value between 0 and 100 representing the current volume.
+ Gets the playback rate. The default value is 1.0, which represents a video playing at normal speed. Other values may include 0.25 or 0.5 for slower speeds, and 1.5 or 2.0 for faster speeds. This method corresponds to the JavaScript API defined here: https://developers.google.com/youtube/iframe_api_reference#getPlaybackRate
+ 
+ @return 
+    An integer value between 0 and 100 representing the current volume.
  */
 - (float)playbackRate;
 
+
 /**
- * Sets the playback rate. The default value is 1.0, which represents a video
- * playing at normal speed. Other values may include 0.25 or 0.5 for slower
- * speeds, and 1.5 or 2.0 for faster speeds. To fetch a list of valid values for
- * this method, call JVYoutubePlayerView::getAvailablePlaybackRates. This method does not
- * guarantee that the playback rate will change.
- * This method corresponds to the JavaScript API defined here:
- *   https://developers.google.com/youtube/iframe_api_reference#setPlaybackRate
- *
- * @param suggestedRate A playback rate to suggest for the player.
+ Sets the playback rate. The default value is 1.0, which represents a video playing at normal speed. Other values may include 0.25 or 0.5 for slower speeds, and 1.5 or 2.0 for faster speeds. To fetch a list of valid values for this method, call JVYoutubePlayerView::getAvailablePlaybackRates. This method does not guarantee that the playback rate will change. This method corresponds to the JavaScript API defined here: https://developers.google.com/youtube/iframe_api_reference#setPlaybackRate
+ 
+ @param suggestedRate 
+    A playback rate to suggest for the player.
  */
 - (void)setPlaybackRate:(float)suggestedRate;
 
+
 /**
- * Gets a list of the valid playback rates, useful in conjunction with
- * JVYoutubePlayerView::setPlaybackRate. This method corresponds to the
- * JavaScript API defined here:
- *   https://developers.google.com/youtube/iframe_api_reference#getPlaybackRate
- *
- * @return An NSArray containing available playback rates. nil if there is an error.
+ Gets a list of the valid playback rates, useful in conjunction with JVYoutubePlayerView::setPlaybackRate. This method corresponds to the JavaScript API defined here: https://developers.google.com/youtube/iframe_api_reference#getPlaybackRate
+ 
+ @return A
+    n NSArray containing available playback rates. nil if there is an error.
  */
 - (NSArray *)availablePlaybackRates;
+
 
 #pragma mark - Setting playback behavior for playlists
 
 /**
- * Sets whether the player should loop back to the first video in the playlist
- * after it has finished playing the last video. This method corresponds to the
- * JavaScript API defined here:
- *   https://developers.google.com/youtube/iframe_api_reference#loopPlaylist
- *
- * @param loop A boolean representing whether the player should loop.
+ Sets whether the player should loop back to the first video in the playlist after it has finished playing the last video. This method corresponds to the JavaScript API defined here: https://developers.google.com/youtube/iframe_api_reference#loopPlaylist
+ 
+ @param loop 
+    A boolean representing whether the player should loop.
  */
 - (void)setLoop:(BOOL)loop;
 
+
 /**
- * Sets whether the player should shuffle through the playlist. This method
- * corresponds to the JavaScript API defined here:
- *   https://developers.google.com/youtube/iframe_api_reference#shufflePlaylist
- *
- * @param shuffle A boolean representing whether the player should
- *                shuffle through the playlist.
+ Sets whether the player should shuffle through the playlist. This method corresponds to the JavaScript API defined here: https://developers.google.com/youtube/iframe_api_reference#shufflePlaylist
+ 
+ @param shuffle 
+    A boolean representing whether the player should shuffle through the playlist.
  */
 - (void)setShuffle:(BOOL)shuffle;
 
@@ -453,22 +443,22 @@
 //   https://developers.google.com/youtube/js_api_reference#Retrieving_video_information
 
 /**
- * Returns the duration in seconds since the video of the video. This
- * method corresponds to the JavaScript API defined here:
- *   https://developers.google.com/youtube/iframe_api_reference#getDuration
- *
- * @return Length of the video in seconds.
+ Returns the duration in seconds since the video of the video. This method corresponds to the JavaScript API defined here: https://developers.google.com/youtube/iframe_api_reference#getDuration
+ 
+ @return 
+    Length of the video in seconds.
  */
 - (int)duration;
 
+
 /**
- * Returns the YouTube.com URL for the video. This method corresponds
- * to the JavaScript API defined here:
- *   https://developers.google.com/youtube/iframe_api_reference#getVideoUrl
- *
- * @return The YouTube.com URL for the video.
+ Returns the YouTube.com URL for the video. This method corresponds to the JavaScript API defined here: https://developers.google.com/youtube/iframe_api_reference#getVideoUrl
+ 
+ @return 
+    The YouTube.com URL for the video.
  */
 - (NSURL *)videoUrl;
+
 
 /**
  * Returns the embed code for the current video. This method corresponds
@@ -479,6 +469,7 @@
  */
 - (NSString *)videoEmbedCode;
 
+
 #pragma mark - Retrieving playlist information
 
 // Retrieving playlist information. These methods correspond to the
@@ -486,44 +477,20 @@
 //    https://developers.google.com/youtube/js_api_reference#Retrieving_playlist_information
 
 /**
- * Returns an ordered array of video IDs in the playlist. This method corresponds
- * to the JavaScript API defined here:
- *   https://developers.google.com/youtube/iframe_api_reference#getPlaylist
- *
- * @return An NSArray containing all the video IDs in the current playlist. |nil| on error.
+ Returns an ordered array of video IDs in the playlist. This method corresponds to the JavaScript API defined here: https://developers.google.com/youtube/iframe_api_reference#getPlaylist
+ 
+ @return 
+    An NSArray containing all the video IDs in the current playlist. |nil| on error.
  */
 - (NSArray *)playlist;
 
+
 /**
- * Returns the 0-based index of the currently playing item in the playlist.
- * This method corresponds to the JavaScript API defined here:
- *   https://developers.google.com/youtube/iframe_api_reference#getPlaylistIndex
- *
- * @return The 0-based index of the currently playing item in the playlist.
+ Returns the 0-based index of the currently playing item in the playlist. This method corresponds to the JavaScript API defined here: https://developers.google.com/youtube/iframe_api_reference#getPlaylistIndex
+ 
+ @return 
+    The 0-based index of the currently playing item in the playlist.
  */
 - (int)playlistIndex;
-
-//#pragma mark - Notifications
-
-// Adding notifications to allow rotation when app is restricted to portrait mode only
-// and to resize the webview in landscape for fullscreen youtube player, more info here:
-//   https://developers.google.com/youtube/iframe_api_reference#getPlaylistIndex
-
-/**
- * This method allows landscape mode when the app is retristed for portrait mode,
- * but requires extra settings on the AppDelegate.m please find an example here:
- *   https://developers.google.com/youtube/iframe_api_reference#getPlaylistIndex
- *
- */
-//- (void)allowLandscapeMode;
-
-/**
- * This method allows to update the youtube webview frame to change to full screen
- * in landscape mode (Good for playlists).
- * for more information find an example here:
- *   https://developers.google.com/youtube/iframe_api_reference#getPlaylistIndex
- *
- */
-//- (void)allowAutoResizingPlayerFrame;
 
 @end
